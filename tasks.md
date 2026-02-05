@@ -27,7 +27,7 @@
 
 ## Phase 4: The Control Room (CMS)
 
-- [ ] **Auth:** Install Laravel Breeze (Vue/Inertia) for secure Admin Login.
-- [ ] **Admin Layout:** Create `AdminLayout.vue` with corporate dark theme.
+- [x] **Auth:** Configure existing **Laravel Fortify** scaffolding with corporate dark theme (replaced Breeze Plan to avoid bloat).
+- [x] **Admin Layout:** Create `AdminLayout.vue` with corporate dark theme.
 - [ ] **Dashboard:** Build a simple dashboard showing recent Leads.
 - [ ] **Case Study Manager:** CRUD interface to manage Case Studies without code.
