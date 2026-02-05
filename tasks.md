@@ -23,4 +23,11 @@
 
 - [x] **ROI Tools:** Develop **ROI Calculator** Vue component (Input: Team size/hours -> Output: Savings).
 - [x] **Lead Capture:** Implement "Book a Strategy Call" form (integrated with a simple mail notification).
-- [ ] **Services:** Defined as "Productized Services" (e.g., "MVP in 4 weeks"), not just a list of languages.
+- [x] **Services:** Defined as "Productized Services" (e.g., "MVP in 4 weeks"), not just a list of languages.
+
+## Phase 4: The Control Room (CMS)
+
+- [ ] **Auth:** Install Laravel Breeze (Vue/Inertia) for secure Admin Login.
+- [ ] **Admin Layout:** Create `AdminLayout.vue` with corporate dark theme.
+- [ ] **Dashboard:** Build a simple dashboard showing recent Leads.
+- [ ] **Case Study Manager:** CRUD interface to manage Case Studies without code.

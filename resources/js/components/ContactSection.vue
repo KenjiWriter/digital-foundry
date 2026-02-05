@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { Mail, CheckCircle } from 'lucide-vue-next';
+import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue';
+import { Mail, Sun, ArrowRight, Loader2, Check } from 'lucide-vue-next';
 
 const form = useForm({
     name: '',
@@ -10,48 +10,283 @@ const form = useForm({
     pain_point: '',
 });
 
-const showSuccess = ref(false);
+const isSuccess = ref(false);
+const isSettled = ref(false); // Animation trigger
+const isFixed = ref(true); // Positioning mode
+const submitButtonRef = ref<HTMLElement | null>(null);
+const containerRef = ref<HTMLElement | null>(null);
+const isHoveringButton = ref(false);
+
+const overlayStyle = reactive({
+    top: '0px',
+    left: '0px',
+    width: '100vw',
+    height: '100vh',
+    borderRadius: '0px',
+});
+
+// Mouse State (Global)
+const mouse = ref({ x: 0, y: 0 });
+const windowSize = ref({ w: 0, h: 0 });
+let animationFrameId: number;
+
+// Current Rendered State (for Smoothing)
+const renderedSun = reactive({
+    x: -30,
+    y: 50,
+    opacity: 0,
+    size: 50
+});
+
+// 1. TYPING PROGRESS
+const typingProgress = computed(() => {
+    let score = 0;
+    if (form.name.length > 0) score += 0.2;
+    if (form.email.length > 2 && form.email.includes('@')) score += 0.2;
+    if (form.website.length > 0) score += 0.1;
+    if (form.pain_point.length > 0) {
+        score += Math.min(form.pain_point.length / 40, 0.5); 
+    }
+    return Math.min(score, 1);
+});
+
+// 2. MOUSE PROXIMITY
+const mouseProximity = computed(() => {
+    if (!submitButtonRef.value || !windowSize.value.w) return 0;
+    
+    // Safety check for SSR or unmounted elements
+    try {
+        const btnRect = submitButtonRef.value.getBoundingClientRect();
+        const btnCenter = {
+            x: btnRect.left + btnRect.width / 2,
+            y: btnRect.top + btnRect.height / 2
+        };
+
+        const dx = mouse.value.x - btnCenter.x;
+        const dy = mouse.value.y - btnCenter.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = windowSize.value.h * 0.6; 
+        
+        if (distance < maxDist) {
+            return Math.pow(1 - (distance / maxDist), 3);
+        }
+    } catch (e) {
+        return 0;
+    }
+    return 0;
+});
+
+// 3. TARGET STATE CALCULATION
+const targetSun = computed(() => {
+    if (isHoveringButton.value) {
+        return { x: 50, y: 50, opacity: 0.8, size: 80 };
+    }
+
+    const progress = typingProgress.value;
+    const prox = mouseProximity.value;
+
+    // TARGET X: Start at -30% (Left), End at 50% (Center)
+    const baseX = -30 + (progress * 80); 
+    
+    // Add mouse influence only if window width is available
+    let mouseInfluenceX = 0;
+    let mouseInfluenceY = 0;
+
+    if (windowSize.value.w > 0 && windowSize.value.h > 0) {
+        mouseInfluenceX = (mouse.value.x / windowSize.value.w - 0.5) * 10;
+        mouseInfluenceY = (mouse.value.y / windowSize.value.h - 0.5) * 10;
+    }
+    
+    const currentX = baseX + mouseInfluenceX;
+    const currentY = 50 + mouseInfluenceY;
+    
+    const baseOpacity = progress * 0.6;
+    const finalOpacity = baseOpacity * (1 + prox * 0.2);
+
+    return {
+        x: currentX,
+        y: currentY,
+        opacity: Math.min(finalOpacity, 0.8), 
+        size: 50 + (progress * 50) 
+    };
+});
+
+// 4. ANIMATION LOOP (LERP)
+const animate = () => {
+    const target = targetSun.value;
+    const lerpFactor = 0.1; // Adjust for smoothness (0.05 = slow/heavy, 0.2 = fast/snappy)
+
+    renderedSun.x += (target.x - renderedSun.x) * lerpFactor;
+    renderedSun.y += (target.y - renderedSun.y) * lerpFactor;
+    renderedSun.opacity += (target.opacity - renderedSun.opacity) * lerpFactor;
+    renderedSun.size += (target.size - renderedSun.size) * lerpFactor;
+
+    animationFrameId = requestAnimationFrame(animate);
+};
+
+// URL Fixer
+const fixUrl = () => {
+    if (form.website && !/^https?:\/\//i.test(form.website)) {
+        form.website = 'https://' + form.website;
+    }
+};
+
+const updateMouse = (e: MouseEvent) => {
+    mouse.value = { x: e.clientX, y: e.clientY };
+};
+const updateWindow = () => {
+    windowSize.value = { w: window.innerWidth, h: window.innerHeight };
+};
+
+onMounted(() => {
+    if (typeof window !== 'undefined') {
+        window.addEventListener('mousemove', updateMouse);
+        window.addEventListener('resize', updateWindow);
+        updateWindow();
+        animate(); // Start loop
+    }
+});
+
+onUnmounted(() => {
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('mousemove', updateMouse);
+        window.removeEventListener('resize', updateWindow);
+        cancelAnimationFrame(animationFrameId);
+    }
+});
+
+const triggerShrink = () => {
+    if (isSettled.value || !containerRef.value) return;
+    
+    const rect = containerRef.value.getBoundingClientRect();
+    
+    overlayStyle.top = `${rect.top}px`;
+    overlayStyle.left = `${rect.left}px`;
+    overlayStyle.width = `${rect.width}px`;
+    overlayStyle.height = `${rect.height}px`;
+    overlayStyle.borderRadius = '24px'; 
+    
+    isSettled.value = true;
+
+    setTimeout(() => {
+        isFixed.value = false;
+        overlayStyle.top = '0';
+        overlayStyle.left = '0';
+        overlayStyle.width = '100%';
+        overlayStyle.height = '100%';
+    }, 1000); 
+};
 
 const submit = () => {
-    // Frontend-only simulation for now
-    console.log('Form Submitted:', form.data());
-    
-    // Simulate API delay
+    fixUrl(); // Auto-fix before submit
     form.processing = true;
     setTimeout(() => {
         form.processing = false;
-        showSuccess.value = true;
+        isSuccess.value = true;
         form.reset();
         
-        // Hide success message after 5 seconds
         setTimeout(() => {
-            showSuccess.value = false;
-        }, 5000);
-    }, 1000);
+            triggerShrink();
+        }, 4000);
+    }, 1500);
 };
+
+// Background Style (Uses RENDERED state, not target)
+const backgroundStyle = computed(() => {
+    if (isSuccess.value) return {}; 
+    const s = renderedSun;
+    return {
+        background: `radial-gradient(circle ${s.size}vmax at ${s.x}% ${s.y}%, rgba(255, 180, 80, ${s.opacity}), transparent 60%)`
+    };
+});
 </script>
 
 <template>
-    <section id="contact" class="py-16 sm:py-24 bg-card border-t border-border">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
+    <section id="contact" ref="containerRef" class="relative py-24 sm:py-32 overflow-hidden">
+        
+        <!-- GLOBAL CINEMATIC OVERLAY (Fixed to Viewport) -->
+        <div 
+            class="fixed inset-0 pointer-events-none z-0"
+            :style="backgroundStyle"
+        ></div>
+
+        <!-- SUCCESS OVERLAY (Morphing) -->
+        <div 
+            v-if="isSuccess"
+            class="z-50 flex flex-col items-center justify-center text-center overflow-hidden cursor-pointer"
+            :class="[
+                isFixed ? 'fixed' : 'absolute',
+                isSettled ? 'bg-[#fefce8] shadow-2xl' : 'bg-[#fefce8]'
+            ]"
+            :style="isFixed ? overlayStyle : { inset: 0, borderRadius: '1.5rem' }"
+            style="transition: top 1s ease-in-out, left 1s ease-in-out, width 1s ease-in-out, height 1s ease-in-out, border-radius 1s;"
+            @click="triggerShrink"
+        >
+            <!-- Large Fullscreen Content -->
+            <div 
+                class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000"
+                :class="isSettled ? 'opacity-0 scale-90 delay-0' : 'opacity-100 scale-100 delay-300'"
+            >
+                <div class="mb-8 mx-auto h-24 w-24 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center animate-pulse">
+                    <Sun class="h-12 w-12" />
+                </div>
+                <h2 class="text-5xl md:text-7xl font-serif text-gray-900 mb-6 drop-shadow-sm tracking-tight leading-tight px-4">
+                    To początek <br/>nowej podróży!
+                </h2>
+                <p class="text-2xl md:text-3xl text-gray-600 font-light max-w-2xl mx-auto px-4 font-sans">
+                    We'll be in touch shortly to light up your business.
+                </p>
+                <p class="mt-12 text-gray-400 text-sm animate-bounce">Click anywhere to close</p>
+            </div>
+
+            <!-- Shrink/Settled Content -->
+            <div 
+                class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000"
+                :class="isSettled ? 'opacity-100 scale-100 delay-500' : 'opacity-0 scale-110'"
+            >
+                 <div class="mb-6 rounded-full bg-green-100 p-4 text-green-600">
+                    <Check class="h-8 w-8" />
+                </div>
+                <h3 class="text-3xl font-bold text-gray-900 mb-2">Message Sent</h3>
+                <p class="text-gray-600 max-w-md px-4">
+                    We've received your request. Expect a tailored proposal in your inbox within 24 hours.
+                </p>
+            </div>
+            
+             <div class="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 transition-opacity duration-700" :class="{'opacity-0': isSuccess}">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                 
-                <!-- Left Column: Copy -->
-                <div class="space-y-8">
-                    <h2 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                        Let's fix this.
+                <!-- Left Column -->
+                <div class="space-y-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-orange-400 backdrop-blur-md">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                        </span>
+                        Accepting New Clients
+                    </div>
+
+                    <h2 class="text-5xl font-bold tracking-tight text-white sm:text-6xl leading-tight">
+                        Let's fix this <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-200">together.</span>
                     </h2>
-                    <p class="text-lg text-muted-foreground leading-relaxed">
-                        Custom software isn't just about code—it's about reclaiming lost time and revenue. 
-                        We build stable, high-performance systems that solve your specific operational headaches.
+                    
+                    <p class="text-xl text-gray-400 leading-relaxed max-w-lg">
+                        You know what the problem is. We know how to solve it with code. 
+                        Fill out the form, and watch the sun rise on a more efficient future.
                     </p>
                     
-                    <div class="space-y-4 pt-4">
-                        <div class="flex items-center gap-3 text-foreground">
-                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                                <Mail class="h-5 w-5" />
-                            </div>
-                            <a href="mailto:hello@roistack.com" class="text-lg font-medium hover:text-primary transition-colors">
+                    <div class="flex items-center gap-4 pt-4">
+                        <div class="h-14 w-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors cursor-pointer backdrop-blur-md">
+                            <Mail class="h-6 w-6" />
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Email Us</p>
+                            <a href="mailto:hello@roistack.com" class="text-2xl font-bold text-white hover:text-orange-400 transition-colors">
                                 hello@roistack.com
                             </a>
                         </div>
@@ -59,78 +294,49 @@ const submit = () => {
                 </div>
 
                 <!-- Right Column: Form -->
-                <div class="bg-muted/10 p-8 rounded-2xl border border-border/50">
-                    <div v-if="showSuccess" class="rounded-lg bg-green-500/10 p-4 text-green-500 flex items-center gap-3 border border-green-500/20 mb-6">
-                        <CheckCircle class="h-5 w-5" />
-                        <span class="font-medium">Request received! We'll be in touch shortly.</span>
-                    </div>
-
+                <div class="relative bg-black/40 backdrop-blur-xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-2xl">
                     <form @submit.prevent="submit" class="space-y-6">
-                         <!-- Name -->
-                        <div class="space-y-2">
-                            <label for="name" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Name
-                            </label>
-                            <input 
-                                id="name" 
-                                v-model="form.name"
-                                type="text" 
-                                required
-                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="John Doe"
-                            />
+                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div class="space-y-2">
+                                <label for="name" class="text-sm font-medium text-gray-400">Name</label>
+                                <input id="name" v-model="form.name" type="text" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" placeholder="Jane Smith" />
+                            </div>
+                            <div class="space-y-2">
+                                <label for="email" class="text-sm font-medium text-gray-400">Work Email</label>
+                                <input id="email" v-model="form.email" type="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" placeholder="jane@company.com" />
+                            </div>
                         </div>
 
-                        <!-- Email -->
                         <div class="space-y-2">
-                            <label for="email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Work Email
-                            </label>
-                            <input 
-                                id="email" 
-                                v-model="form.email"
-                                type="email" 
-                                required
-                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="john@company.com"
-                            />
-                        </div>
-
-                        <!-- Website -->
-                        <div class="space-y-2">
-                            <label for="website" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                Company Website <span class="text-muted-foreground font-normal ml-1">(Optional)</span>
-                            </label>
+                            <label for="website" class="text-sm font-medium text-gray-400">Company Website</label>
                             <input 
                                 id="website" 
-                                v-model="form.website"
-                                type="url" 
-                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="https://company.com"
+                                v-model="form.website" 
+                                type="text" 
+                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" 
+                                placeholder="company.com"
+                                @blur="fixUrl" 
                             />
                         </div>
 
-                        <!-- Pain Point -->
                         <div class="space-y-2">
-                            <label for="pain_point" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                What's your biggest operational pain point?
-                            </label>
-                            <textarea 
-                                id="pain_point" 
-                                v-model="form.pain_point"
-                                rows="4"
-                                required
-                                class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="e.g. We spend 10 hours a week merging Excel sheets..."
-                            ></textarea>
+                            <label for="pain_point" class="text-sm font-medium text-gray-400">The Challenge</label>
+                            <textarea id="pain_point" v-model="form.pain_point" rows="4" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all resize-none font-light tracking-wide" placeholder="Describe the inefficiency you want to eliminate..."></textarea>
                         </div>
 
                         <button 
+                            ref="submitButtonRef"
                             type="submit" 
                             :disabled="form.processing"
-                            class="inline-flex w-full items-center justify-center rounded-lg bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-opacity disabled:opacity-70"
+                            class="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-white px-8 py-4 text-base font-bold text-black transition-all hover:bg-orange-400 hover:text-white disabled:opacity-70 disabled:hover:bg-white disabled:hover:text-black"
+                            @mouseenter="isHoveringButton = true"
+                            @mouseleave="isHoveringButton = false"
                         >
-                            {{ form.processing ? 'Sending...' : 'Request Free Audit' }}
+                            <span class="relative z-10 flex items-center gap-2">
+                                <Loader2 v-if="form.processing" class="h-5 w-5 animate-spin" />
+                                <span v-else>{{ form.processing ? 'Starting Engines...' : 'Request Free Audit' }}</span>
+                                <ArrowRight v-if="!form.processing" class="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            </span>
                         </button>
                     </form>
                 </div>
@@ -138,3 +344,9 @@ const submit = () => {
         </div>
     </section>
 </template>
+
+<style scoped>
+.font-serif {
+    font-family: 'Playfair Display', serif; 
+}
+</style>
