@@ -18,3 +18,9 @@
 - [x] **Frontend - Detail:** Build `CaseStudies/Show.vue` utilizing the structured data (Problem/Solution/ROI).
 - [ ] **Components:** Create `BeforeAfterSlider.vue` component for visual comparison ("The Wow Component").
 - [x] **Seeding:** Create a Seeder with dummy Case Study data for development.
+
+## Phase 3: The Conversion Layer
+
+- [x] **ROI Tools:** Develop **ROI Calculator** Vue component (Input: Team size/hours -> Output: Savings).
+- [x] **Lead Capture:** Implement "Book a Strategy Call" form (integrated with a simple mail notification).
+- [ ] **Services:** Defined as "Productized Services" (e.g., "MVP in 4 weeks"), not just a list of languages.

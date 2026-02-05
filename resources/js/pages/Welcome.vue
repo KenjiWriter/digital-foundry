@@ -4,6 +4,7 @@ import MainLayout from '@/layouts/MainLayout.vue';
 import HeroSection from '@/Components/HeroSection.vue';
 import TrustBar from '@/Components/TrustBar.vue';
 import RoiCalculator from '@/Components/RoiCalculator.vue';
+import ContactSection from '@/Components/ContactSection.vue';
 </script>
 
 <template>
@@ -13,6 +14,7 @@ import RoiCalculator from '@/Components/RoiCalculator.vue';
         <HeroSection />
         <TrustBar />
         <RoiCalculator />
+        <ContactSection />
     </MainLayout>
 </template>
 
