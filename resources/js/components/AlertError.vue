@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AlertCircle } from 'lucide-vue-next';
 import { computed } from 'vue';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert';
 
 type Props = {
     errors: string[];
@@ -28,3 +28,4 @@ const uniqueErrors = computed(() => Array.from(new Set(props.errors)));
         </AlertDescription>
     </Alert>
 </template>
+

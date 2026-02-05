@@ -18,3 +18,4 @@ export type TwoFactorConfigContent = {
     description: string;
     buttonText: string;
 };
+

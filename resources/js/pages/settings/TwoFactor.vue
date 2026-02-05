@@ -2,11 +2,11 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
-import Heading from '@/components/Heading.vue';
-import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
-import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Heading from '@/Components/Heading.vue';
+import TwoFactorRecoveryCodes from '@/Components/TwoFactorRecoveryCodes.vue';
+import TwoFactorSetupModal from '@/Components/TwoFactorSetupModal.vue';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
@@ -123,3 +123,4 @@ onUnmounted(() => {
         </SettingsLayout>
     </AppLayout>
 </template>
+

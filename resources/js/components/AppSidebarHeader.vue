@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import Breadcrumbs from '@/Components/Breadcrumbs.vue';
+import { SidebarTrigger } from '@/Components/ui/sidebar';
 import type { BreadcrumbItem } from '@/types';
 
 withDefaults(
@@ -25,3 +25,4 @@ withDefaults(
         </div>
     </header>
 </template>
+

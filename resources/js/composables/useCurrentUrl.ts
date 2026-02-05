@@ -57,3 +57,4 @@ export function useCurrentUrl(): UseCurrentUrlReturn {
         whenCurrentUrl,
     };
 }
+

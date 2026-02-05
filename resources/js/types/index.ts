@@ -12,3 +12,4 @@ export type AppPageProps<
     sidebarOpen: boolean;
     [key: string]: unknown;
 };
+

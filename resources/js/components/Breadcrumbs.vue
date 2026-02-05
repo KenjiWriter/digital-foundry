@@ -7,7 +7,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@/Components/ui/breadcrumb';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
 type Props = {
@@ -38,3 +38,4 @@ defineProps<Props>();
         </BreadcrumbList>
     </Breadcrumb>
 </template>
+

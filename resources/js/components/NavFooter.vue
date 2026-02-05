@@ -5,7 +5,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from '@/Components/ui/sidebar';
 import { toUrl } from '@/lib/utils';
 import { type NavItem } from '@/types';
 
@@ -42,3 +42,4 @@ defineProps<Props>();
         </SidebarGroupContent>
     </SidebarGroup>
 </template>
+
