@@ -14,7 +14,7 @@
 - [x] **Model:** Create `CaseStudy` model with strict typing and strict casts for JSON attributes.
 - [x] **Backend:** Implement `CaseStudyController` (Index/Show methods) and Resource classes.
 - [x] **Routing:** Define routes for Case Studies index and detail pages.
-- [ ] **Frontend - Index:** Build `CaseStudies/Index.vue` with grid layout and summary cards.
+- [x] **Frontend - Index:** Build `CaseStudies/Index.vue` with grid layout and summary cards.
 - [ ] **Frontend - Detail:** Build `CaseStudies/Show.vue` utilizing the structured data (Problem/Solution/ROI).
 - [ ] **Components:** Create `BeforeAfterSlider.vue` component for visual comparison ("The Wow Component").
 - [x] **Seeding:** Create a Seeder with dummy Case Study data for development.
