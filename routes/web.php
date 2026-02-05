@@ -14,4 +14,9 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__.'/settings.php';
+Route::controller(\App\Http\Controllers\CaseStudyController::class)->group(function () {
+    Route::get('/case-studies', 'index')->name('case-studies.index');
+    Route::get('/case-studies/{caseStudy}', 'show')->name('case-studies.show');
+});
+
+require __DIR__ . '/settings.php';

@@ -12,8 +12,8 @@
 
 - [x] **Database:** Create `case_studies` migration with `json` columns for `problem`, `solution`, `roi_metrics`.
 - [x] **Model:** Create `CaseStudy` model with strict typing and strict casts for JSON attributes.
-- [ ] **Backend:** Implement `CaseStudyController` (Index/Show methods) and Resource classes.
-- [ ] **Routing:** Define routes for Case Studies index and detail pages.
+- [x] **Backend:** Implement `CaseStudyController` (Index/Show methods) and Resource classes.
+- [x] **Routing:** Define routes for Case Studies index and detail pages.
 - [ ] **Frontend - Index:** Build `CaseStudies/Index.vue` with grid layout and summary cards.
 - [ ] **Frontend - Detail:** Build `CaseStudies/Show.vue` utilizing the structured data (Problem/Solution/ROI).
 - [ ] **Components:** Create `BeforeAfterSlider.vue` component for visual comparison ("The Wow Component").
