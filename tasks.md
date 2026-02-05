@@ -17,4 +17,4 @@
 - [ ] **Frontend - Index:** Build `CaseStudies/Index.vue` with grid layout and summary cards.
 - [ ] **Frontend - Detail:** Build `CaseStudies/Show.vue` utilizing the structured data (Problem/Solution/ROI).
 - [ ] **Components:** Create `BeforeAfterSlider.vue` component for visual comparison ("The Wow Component").
-- [ ] **Seeding:** Create a Seeder with dummy Case Study data for development.
+- [x] **Seeding:** Create a Seeder with dummy Case Study data for development.
