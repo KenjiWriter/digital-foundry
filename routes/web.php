@@ -6,6 +6,10 @@ use Laravel\Fortify\Features;
 
 Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
+Route::get('/process', function () {
+    return Inertia::render('Process');
+})->name('process');
+
 Route::get('/privacy-policy', function () {
     $locale = session('locale', 'en');
     $path = resource_path("markdown/legal/{$locale}/privacy.md");
