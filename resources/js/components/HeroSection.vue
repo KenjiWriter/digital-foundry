@@ -26,7 +26,7 @@ const scrollToAudit = () => {
         </div>
 
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mx-auto max-w-4xl text-center">
+            <div class="mx-auto max-w-7xl text-center">
                 
                 <!-- Trust Pill -->
                 <div class="mb-8 flex justify-center fade-in-up">
@@ -39,20 +39,24 @@ const scrollToAudit = () => {
                     </span>
                 </div>
 
-                <!-- Headline -->
+                <!-- Headline (Block Layout for Absolute Stability) -->
                 <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-tight sm:leading-tight lg:leading-tight mb-8">
-                    {{ trans('hero.title_start') }} <span class="text-accent relative inline-block min-h-[1.2em] sm:min-h-[1.1em] align-top">
-                        <TypewriterText 
-                            :text="trans<string[]>('hero.title_typing')" 
-                            :loop="true" 
-                            :speed="100"
-                            :deleteSpeed="50"
-                            :delay="1000"
-                        />
-                        <svg class="absolute -bottom-2.5 left-0 h-3 w-full text-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                            <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
-                        </svg>
-                    </span>.
+                    <span class="block mb-2 sm:mb-4">{{ trans('hero.title_start') }}</span>
+                    
+                    <span class="block min-h-[1.5em] sm:min-h-[1.3em] text-accent relative">
+                        <span class="relative inline-block">
+                            <TypewriterText 
+                                :text="trans<string[]>('hero.title_typing')" 
+                                :loop="true" 
+                                :speed="100"
+                                :deleteSpeed="50"
+                                :delay="1500"
+                            />
+                            <svg class="absolute -bottom-2 left-0 h-3 w-full text-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
+                            </svg>
+                        </span>
+                    </span>
                 </h1>
 
                 <!-- Subheadline -->
