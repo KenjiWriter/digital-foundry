@@ -37,7 +37,7 @@ declare const route: any;
             <div class="grid auto-rows-min gap-4 md:grid-cols-2">
                 
                 <!-- Manage Case Studies Card -->
-                <Link :href="route('admin.case-studies.index')" class="group relative overflow-hidden rounded-xl border border-gray-800 bg-[#111827] p-6 transition-all hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
+                <Link href="/admin/case-studies" class="group relative overflow-hidden rounded-xl border border-gray-800 bg-[#111827] p-6 transition-all hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
                     <div class="flex items-center gap-4 mb-4">
                         <div class="p-3 rounded-lg bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                             <Folder class="h-6 w-6" />
