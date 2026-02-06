@@ -60,20 +60,34 @@ const navLinks = computed(() => [
                     </ul>
                 </div>
 
-                <!-- Column 3: Contact Info -->
+                <!-- Column 3: Contact Info & Map -->
                 <div>
                     <h3 class="text-sm font-semibold text-foreground">{{ trans('footer.contact') }}</h3>
-                    <ul class="mt-4 space-y-2">
-                        <li>
-                            <a href="mailto:hello@digitalfoundry.com" class="text-sm text-muted-foreground hover:text-primary">
+                    <ul class="mt-4 space-y-3">
+                        <li class="flex flex-col space-y-1">
+                             <a href="mailto:hello@digitalfoundry.com" class="text-sm text-muted-foreground hover:text-primary transition-colors">
                                 hello@digitalfoundry.com
                             </a>
+                             <a href="tel:+48455518083" class="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                {{ trans('footer.phone') }}
+                            </a>
                         </li>
-                        <li class="text-sm text-muted-foreground">
-                            123 Business Avenue<br>
-                            Tech City, TC 90210
+                        <li class="text-sm text-muted-foreground leading-relaxed">
+                            {{ trans('footer.address') }}
                         </li>
                     </ul>
+
+                    <!-- Map Embed -->
+                    <div class="mt-6">
+                        <p class="text-xs text-muted-foreground mb-2">{{ trans('footer.map_label') }}</p>
+                        <iframe 
+                            src="https://maps.google.com/maps?q=Emilianów+8A,+96-330,+Polska&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            class="w-full h-64 rounded-lg border border-slate-700/50 shadow-sm transition-all duration-500"
+                            allowfullscreen
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade"
+                        ></iframe>
+                    </div>
                 </div>
             </div>
 
