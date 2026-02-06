@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/vue3';
 import MainLayout from '@/layouts/MainLayout.vue';
 import HeroSection from '@/Components/HeroSection.vue';
 import TrustBar from '@/Components/TrustBar.vue';
-import RoiCalculator from '@/Components/RoiCalculator.vue';
+import BusinessAudit from '@/Components/Landing/BusinessAudit.vue';
 import ContactSection from '@/Components/ContactSection.vue';
 import { useTelemetry } from '@/Composables/useTelemetry';
 import { useCookieConsent } from '@/Composables/useCookieConsent';
@@ -25,8 +25,8 @@ if (consentStatus.value === 'granted') {
         <div id="trust-bar">
             <TrustBar />
         </div>
-        <div id="roi">
-            <RoiCalculator />
+        <div id="audit">
+            <BusinessAudit />
         </div>
         <div id="contact">
             <ContactSection />

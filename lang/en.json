@@ -55,5 +55,16 @@
     "cookie.policy": "Read Policy",
     "legal.privacy": "Privacy Policy",
     "legal.terms": "Terms of Service",
-    "legal.last_updated": "Last updated:"
+    "legal.last_updated": "Last updated:",
+    "audit.badge": "Discovery Engine",
+    "audit.title": "Interactive Business Audit",
+    "audit.subtitle": "Diagnose implementation gaps and calculate your potential savings in minutes.",
+    "audit.step1_title": "Select your industry",
+    "audit.step2_title": "What challenges do you face?",
+    "audit.next": "Analyze Impact",
+    "audit.step3_title": "Quantify the volume",
+    "audit.calculate": "Generate Diagnosis",
+    "audit.results_title": "Potential Annual Savings",
+    "audit.cta_proposal": "Get a Correction Plan",
+    "audit.restart": "Start Over"
 }

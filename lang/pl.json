@@ -55,5 +55,16 @@
     "cookie.policy": "Polityka Prywatności",
     "legal.privacy": "Polityka Prywatności",
     "legal.terms": "Regulamin",
-    "legal.last_updated": "Ostatnia aktualizacja:"
+    "legal.last_updated": "Ostatnia aktualizacja:",
+    "audit.badge": "Silnik Odkrywania",
+    "audit.title": "Interaktywny Audyt Biznesowy",
+    "audit.subtitle": "Zdiagnozuj luki we wdrożeniu i oblicz potencjalne oszczędności w kilka minut.",
+    "audit.step1_title": "Wybierz branżę",
+    "audit.step2_title": "Z czym masz problem?",
+    "audit.next": "Analizuj Wpływ",
+    "audit.step3_title": "Określ skalę",
+    "audit.calculate": "Generuj diagnozę",
+    "audit.results_title": "Potencjalne roczne oszczędności",
+    "audit.cta_proposal": "Uzyskaj plan naprawczy",
+    "audit.restart": "Zacznij od nowa"
 }
