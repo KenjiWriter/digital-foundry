@@ -44,6 +44,7 @@ onUnmounted(() => {
 <template>
     <Head title="Cerasus Digital | Dedykowane Oprogramowanie dla Biznesu">
         <meta name="description" content="Przekształć swój biznes dzięki dedykowanym aplikacjom webowym. Jesteśmy software housem specjalizującym się w skalowalnych rozwiązaniach Laravel i Vue.">
+        <link rel="canonical" :href="($page.props.url as string)" />
     </Head>
 
     <!-- Digital Globe (Page Level Overlay) -->

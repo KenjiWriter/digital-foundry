@@ -10,6 +10,7 @@ const { trans } = useTrans();
 <template>
     <Head title="Usługi Programistyczne & Audyt IT | Cerasus Digital">
         <meta name="description" content="Oferujemy budowę systemów CRM/ERP, audyty kodu oraz przejmowanie projektów (Rescue Projects). Sprawdź naszą ofertę B2B.">
+        <link rel="canonical" :href="($page.props.url as string)" />
     </Head>
 
     <MainLayout>
