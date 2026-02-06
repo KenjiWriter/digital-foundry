@@ -10,15 +10,12 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('dashboard', function () {
-    $stats = \App\Models\SiteStat::where('date', '>=', now()->subDays(30))
-        ->orderBy('date')
-        ->get();
+Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-    return Inertia::render('Dashboard', [
-        'stats' => $stats
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::post('analytics/track', [\App\Http\Controllers\DashboardController::class, 'track'])
+    ->name('analytics.track');
 
 Route::get('language/{locale}', function ($locale) {
     if (in_array($locale, ['en', 'pl', 'es', 'ru'])) {
