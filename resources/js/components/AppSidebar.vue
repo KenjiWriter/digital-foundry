@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Mail } from 'lucide-vue-next';
 import NavFooter from '@/Components/NavFooter.vue';
 import NavMain from '@/Components/NavMain.vue';
 import NavUser from '@/Components/NavUser.vue';
@@ -13,7 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/Components/ui/sidebar';
-import { dashboard } from '@/routes';
+// import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import AppLogo from './AppLogo.vue';
 
@@ -31,6 +31,11 @@ const mainNavItems: NavItem[] = [
         href: '/admin/case-studies',
         icon: Folder,
     },
+    {
+        title: 'Leads',
+        href: '/admin/leads',
+        icon: Mail,
+    },
 ];
 
 const footerNavItems: NavItem[] = [];
@@ -42,7 +47,7 @@ const footerNavItems: NavItem[] = [];
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link href="/dashboard">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
