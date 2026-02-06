@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/vue3';
 import MainLayout from '@/layouts/MainLayout.vue';
 import { useTrans } from '@/composables/useTrans';
 
-const trans = useTrans();
+const { trans } = useTrans();
 
 defineProps<{
     content: string;

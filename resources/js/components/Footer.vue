@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Twitter, Github, Linkedin } from 'lucide-vue-next';
 import { useTrans } from '@/composables/useTrans';
+import AppLogo from '@/Components/AppLogo.vue';
+import { Twitter, Github, Linkedin, Mail } from 'lucide-vue-next';
 import { computed } from 'vue';
 
-const trans = useTrans();
+const { trans } = useTrans();
 const currentYear = new Date().getFullYear();
 
 const navLinks = computed(() => [
@@ -64,8 +65,8 @@ const navLinks = computed(() => [
                     <h3 class="text-sm font-semibold text-foreground">{{ trans('footer.contact') }}</h3>
                     <ul class="mt-4 space-y-2">
                         <li>
-                            <a href="mailto:hello@roistack.com" class="text-sm text-muted-foreground hover:text-primary">
-                                hello@roistack.com
+                            <a href="mailto:hello@digitalfoundry.com" class="text-sm text-muted-foreground hover:text-primary">
+                                hello@digitalfoundry.com
                             </a>
                         </li>
                         <li class="text-sm text-muted-foreground">

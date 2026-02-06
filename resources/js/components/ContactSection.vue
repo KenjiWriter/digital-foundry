@@ -4,7 +4,7 @@ import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue';
 import { Mail, Sun, ArrowRight, Loader2, Check } from 'lucide-vue-next';
 import { useTrans } from '@/composables/useTrans';
 
-const trans = useTrans();
+const { trans } = useTrans();
 
 const form = useForm({
     name: '',
@@ -292,8 +292,8 @@ const backgroundStyle = computed(() => {
                         </div>
                         <div>
                             <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">{{ trans('contact.email_us') }}</p>
-                            <a href="mailto:hello@roistack.com" class="text-2xl font-bold text-white hover:text-orange-400 transition-colors">
-                                hello@roistack.com
+                            <a href="mailto:hello@digitalfoundry.com" class="text-xl font-medium text-foreground hover:text-primary transition-colors">
+                                hello@digitalfoundry.com
                             </a>
                         </div>
                     </div>

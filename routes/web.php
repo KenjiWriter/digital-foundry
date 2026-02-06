@@ -4,11 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
 Route::get('/privacy-policy', function () {
     $locale = session('locale', 'en');
@@ -62,6 +58,7 @@ Route::controller(\App\Http\Controllers\CaseStudyController::class)->group(funct
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('case-studies', \App\Http\Controllers\Admin\CaseStudyController::class);
     Route::resource('leads', \App\Http\Controllers\Admin\LeadController::class);
+    Route::resource('sectors', \App\Http\Controllers\Admin\SectorController::class);
 });
 
 Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');

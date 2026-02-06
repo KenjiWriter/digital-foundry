@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTrans } from '@/composables/useTrans';
-const trans = useTrans();
+const { trans } = useTrans();
 
 // Placeholder text-based logos for now
 const companies = [

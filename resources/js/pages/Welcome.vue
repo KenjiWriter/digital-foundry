@@ -8,6 +8,11 @@ import ContactSection from '@/Components/ContactSection.vue';
 import { useTelemetry } from '@/Composables/useTelemetry';
 import { useCookieConsent } from '@/Composables/useCookieConsent';
 
+const props = defineProps<{
+    auditSectors?: any[];
+    canRegister?: boolean;
+}>();
+
 const { consentStatus } = useCookieConsent();
 
 if (consentStatus.value === 'granted') {
@@ -26,7 +31,7 @@ if (consentStatus.value === 'granted') {
             <TrustBar />
         </div>
         <div id="audit">
-            <BusinessAudit />
+            <BusinessAudit :sectors="props.auditSectors" />
         </div>
         <div id="contact">
             <ContactSection />

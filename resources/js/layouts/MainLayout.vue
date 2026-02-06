@@ -8,7 +8,7 @@ import CookieBanner from '@/Components/CookieBanner.vue';
 
 // Mobile menu state
 const isMobileMenuOpen = ref(false);
-const trans = useTrans();
+const { trans } = useTrans();
 
 const currentYear = new Date().getFullYear();
 

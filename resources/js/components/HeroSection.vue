@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
-import { ArrowRight, BarChart } from 'lucide-vue-next';
+import { ArrowRight, BarChart, Sparkles } from 'lucide-vue-next';
 import { useTrans } from '@/composables/useTrans';
 import TypewriterText from '@/Components/TypewriterText.vue';
+import { Button } from '@/Components/ui/button';
 
-const trans = useTrans();
+const { trans } = useTrans();
 import InteractiveGrid from '@/Components/InteractiveGrid.vue';
 import DigitalGlobe from '@/Components/DigitalGlobe.vue';
 
+const scrollToAudit = () => {
+    document.getElementById('audit')?.scrollIntoView({ behavior: 'smooth' });
+};
 const isGlobeLoading = ref(true);
 
 onMounted(() => {

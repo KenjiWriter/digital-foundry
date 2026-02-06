@@ -4,7 +4,7 @@ import { useTrans } from '@/composables/useTrans';
 import { Link } from '@inertiajs/vue3';
 
 const { consentStatus, setConsent } = useCookieConsent();
-const trans = useTrans();
+const { trans } = useTrans();
 </script>
 
 <template>

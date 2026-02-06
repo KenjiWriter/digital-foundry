@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Mail } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Mail, ClipboardList } from 'lucide-vue-next';
 import NavFooter from '@/Components/NavFooter.vue';
 import NavMain from '@/Components/NavMain.vue';
 import NavUser from '@/Components/NavUser.vue';
@@ -35,6 +35,11 @@ const mainNavItems: NavItem[] = [
         title: 'Leads',
         href: '/admin/leads',
         icon: Mail,
+    },
+    {
+        title: 'Audit Manager',
+        href: '/admin/sectors',
+        icon: ClipboardList,
     },
 ];
 
