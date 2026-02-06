@@ -8,6 +8,7 @@ export function useTelemetry() {
     const currentSection = ref(null);
     const lastSectionEnterTime = ref(Date.now());
     const hasStartedForm = ref(false);
+    const isSubmitted = ref(false);
 
     if (!sessionId.value) {
         sessionId.value = uuidv4();
@@ -89,7 +90,7 @@ export function useTelemetry() {
         });
 
         // Form Observer
-        const contactForm = document.getElementById('contact-form'); // Ensure form has this ID
+        const contactForm = document.getElementById('contact-form');
         if (contactForm) {
             const handleInput = () => {
                 if (!hasStartedForm.value) {
@@ -100,14 +101,20 @@ export function useTelemetry() {
                     contactForm.removeEventListener('input', handleInput);
                 }
             };
+
+            const handleSubmit = () => {
+                isSubmitted.value = true;
+                addEvent('form_submit');
+            };
+
             contactForm.addEventListener('input', handleInput);
+            contactForm.addEventListener('submit', handleSubmit);
         }
 
         // Periodic sync (every 30s)
         const interval = setInterval(sendData, 30000);
 
-        onBeforeUnmount(() => {
-            clearInterval(interval);
+        const handlePageHide = () => {
             // Capture final section time
             if (currentSection.value) {
                 const now = Date.now();
@@ -117,7 +124,21 @@ export function useTelemetry() {
                     duration: duration
                 });
             }
+
+            // Check for abandoned form
+            if (hasStartedForm.value && !isSubmitted.value) {
+                addEvent('abandoned_form');
+            }
+
             sendData();
+        };
+
+        window.addEventListener('pagehide', handlePageHide);
+
+        onBeforeUnmount(() => {
+            clearInterval(interval);
+            window.removeEventListener('pagehide', handlePageHide);
+            handlePageHide();
         });
     });
 
