@@ -47,5 +47,13 @@
     "footer.quick_links": "Enlaces rápidos",
     "footer.privacy": "Política de Privacidad",
     "footer.contact": "Contacto",
-    "footer.rights": "Todos los derechos reservados."
+    "footer.rights": "Todos los derechos reservados.",
+    "cookie.title": "Valoramos su privacidad",
+    "cookie.text": "Utilizamos cookies para analizar el tráfico y mejorar la experiencia del usuario. Puede gestionar sus preferencias.",
+    "cookie.accept": "Aceptar todo",
+    "cookie.reject": "Rechazar no esenciales",
+    "cookie.policy": "Leer política",
+    "legal.privacy": "Política de Privacidad",
+    "legal.terms": "Términos de Servicio",
+    "legal.last_updated": "Última actualización:"
 }
