@@ -5,8 +5,7 @@ import { Button } from '@/Components/ui/button';
 import { Badge } from '@/Components/ui/badge';
 import { Plus, Edit, Trash2, Globe, EyeOff, LayoutTemplate } from 'lucide-vue-next';
 
-// Declare route globally
-declare const route: any;
+
 
 defineProps<{
     caseStudies: any[];
@@ -14,7 +13,9 @@ defineProps<{
 
 const deleteCaseStudy = (id: number) => {
     if (confirm('Are you sure you want to delete this case study?')) {
-        router.delete(route('admin.case-studies.destroy', id));
+    if (confirm('Are you sure you want to delete this case study?')) {
+        router.delete(`/admin/case-studies/${id}`);
+    }
     }
 };
 </script>
@@ -28,7 +29,7 @@ const deleteCaseStudy = (id: number) => {
                     <h1 class="text-3xl font-bold tracking-tight text-white">Case Studies</h1>
                     <p class="text-gray-400 text-sm mt-1">Manage your portfolio items.</p>
                 </div>
-                <Link :href="route('admin.case-studies.create')">
+                <Link href="/admin/case-studies/create">
                     <Button class="bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20">
                         <Plus class="mr-2 h-4 w-4" /> New Case Study
                     </Button>
@@ -40,7 +41,7 @@ const deleteCaseStudy = (id: number) => {
                 <LayoutTemplate class="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <h3 class="text-lg font-medium text-white">No case studies yet</h3>
                 <p class="text-gray-500 mb-6">Start by adding your first success story.</p>
-                <Link :href="route('admin.case-studies.create')">
+                <Link href="/admin/case-studies/create">
                     <Button variant="outline">Create Now</Button>
                 </Link>
             </div>
@@ -85,7 +86,7 @@ const deleteCaseStudy = (id: number) => {
 
                     <!-- Actions -->
                     <div class="flex items-center gap-2">
-                        <Link :href="route('admin.case-studies.edit', study.id)">
+                        <Link :href="`/admin/case-studies/${study.id}/edit`">
                             <Button variant="ghost" size="icon" class="text-gray-400 hover:text-white hover:bg-white/10">
                                 <Edit class="h-4 w-4" />
                             </Button>

@@ -29,8 +29,7 @@ const form = useForm({
     _method: isEditing ? 'PUT' : 'POST',
 });
 
-// Declare global route function if needed, or just assume it exists
-declare const route: any;
+
 
 const imagePreview = ref(props.caseStudy?.cover_image_path ? `/storage/${props.caseStudy.cover_image_path}` : null);
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -49,23 +48,23 @@ const handleImageChange = (e: Event) => {
 
 const submit = () => {
     if (isEditing) {
-        form.post(route('admin.case-studies.update', props.caseStudy.id), {
+        form.post(`/admin/case-studies/${props.caseStudy.id}`, {
             forceFormData: true,
         });
     } else {
-        form.post(route('admin.case-studies.store'));
+        form.post('/admin/case-studies');
     }
 };
 </script>
 
 <template>
-    <AdminLayout :breadcrumbs="[{ title: 'Case Studies', href: route('admin.case-studies.index') }, { title: isEditing ? 'Edit' : 'Create', href: '#' }]">
+    <AdminLayout :breadcrumbs="[{ title: 'Case Studies', href: '/admin/case-studies' }, { title: isEditing ? 'Edit' : 'Create', href: '#' }]">
         
         <div class="max-w-5xl mx-auto py-8">
             <!-- Header -->
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4">
-                    <Link :href="route('admin.case-studies.index')" class="p-2 rounded-full hover:bg-white/10 transition-colors">
+                    <Link href="/admin/case-studies" class="p-2 rounded-full hover:bg-white/10 transition-colors">
                         <ArrowLeft class="h-6 w-6 text-gray-400" />
                     </Link>
                     <div>
