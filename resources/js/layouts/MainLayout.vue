@@ -103,7 +103,7 @@ const toggleMobileMenu = () => {
                     
                     <!-- Column 1: Brand/One-liner -->
                     <div class="space-y-4">
-                        <Link href="/" class="text-xl font-bold text-primary">ROI Stack</Link>
+                        <Link href="/" class="text-xl font-bold text-primary">Digital Foundry</Link>
                         <p class="text-sm leading-relaxed text-muted-foreground">
                             Helping B2B companies automate processes and increase revenue with high-performance software.
                         </p>
@@ -157,7 +157,7 @@ const toggleMobileMenu = () => {
 
                 <div class="mt-8 border-t border-border pt-8">
                     <p class="text-center text-xs text-muted-foreground">
-                        &copy; {{ currentYear }} ROI Stack. All rights reserved.
+                        &copy; {{ currentYear }} Digital Foundry. All rights reserved.
                     </p>
                 </div>
             </div>

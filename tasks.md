@@ -29,5 +29,9 @@
 
 - [x] **Auth:** Configure existing **Laravel Fortify** scaffolding with corporate dark theme (replaced Breeze Plan to avoid bloat).
 - [x] **Admin Layout:** Create `AdminLayout.vue` with corporate dark theme.
-- [ ] **Dashboard:** Build a simple dashboard showing recent Leads.
-- [ ] **Case Study Manager:** CRUD interface to manage Case Studies without code.
+- [x] **Dashboard:** Build a simple dashboard showing recent Leads.
+- [x] **Case Study Manager:** CRUD interface to manage Case Studies without code.
+
+## Final
+- [x] **Documentation:** Created CMS Guide and Deployment Guide.
+- [x] **Branding:** Rebranded to "Digital Foundry".

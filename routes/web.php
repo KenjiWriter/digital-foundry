@@ -19,4 +19,8 @@ Route::controller(\App\Http\Controllers\CaseStudyController::class)->group(funct
     Route::get('/case-studies/{caseStudy}', 'show')->name('case-studies.show');
 });
 
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('case-studies', \App\Http\Controllers\Admin\CaseStudyController::class);
+});
+
 require __DIR__ . '/settings.php';
