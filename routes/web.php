@@ -10,6 +10,36 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/privacy-policy', function () {
+    $locale = session('locale', 'en');
+    $path = resource_path("markdown/legal/{$locale}/privacy.md");
+
+    if (!file_exists($path)) {
+        $path = resource_path("markdown/legal/en/privacy.md");
+    }
+
+    $content = \Illuminate\Support\Str::markdown(file_get_contents($path));
+
+    return Inertia::render('Legal/PrivacyPolicy', [
+        'content' => $content
+    ]);
+})->name('privacy.policy');
+
+Route::get('/terms-of-service', function () {
+    $locale = session('locale', 'en');
+    $path = resource_path("markdown/legal/{$locale}/terms.md");
+
+    if (!file_exists($path)) {
+        $path = resource_path("markdown/legal/en/terms.md");
+    }
+
+    $content = \Illuminate\Support\Str::markdown(file_get_contents($path));
+
+    return Inertia::render('Legal/TermsOfService', [
+        'content' => $content
+    ]);
+})->name('terms.service');
+
 Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
