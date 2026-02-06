@@ -1,50 +1,29 @@
-# ROADMAP: B2B Developer Sales Platform
+# ROADMAP: Digital Foundry v2.0
 
-**Goal:** Build a high-performance B2B Sales Tool that converts SMB owners by demonstrating ROI, Process Automation, and Stability.
+**Goal:** Transform the MVP into a "Living Application" with data intelligence and cinematic visuals.
 
-## Phase 1: The "Value-First" Foundation
-*Focus: Setting up a professional, trust-inducing environment immediately.*
+## Phase 5: Intelligence & CRM (The Brain)
+*Focus: Capturing data and managing leads within the application.*
 
-- **Tech Stack Initialization:**
-  - [ ] Setup Laravel 12 (Service-oriented architecture).
-  - [ ] Setup Inertia.js + Vue 3 (Composition API, `<script setup>`).
-  - [ ] Setup Tailwind CSS (Corporate/SaaS palette: Deep Blues, Clean Grays).
-- **Hero Section:**
-  - [ ] Implementation focus on **Client Pain Points** (e.g., "Stop fighting with Excel") rather than generic dev intros.
-  - [ ] High-impact typography and clear value proposition.
-- **Trust Building:**
-  - [ ] Create "Trust Bar" component (Logos/Stats placeholder) to establish immediate authority.
+-   **Lead Storage:**
+    -   [ ] Modify Contact Form flow: Save to DB -> Email Notification -> Frontend Success.
+    -   [ ] Build **Admin Leads View**: A table to view, filter, and delete contact requests.
+-   **Privacy-First Analytics:**
+    -   [ ] Implement a lightweight middleware to track **Unique Visitors** and **Avg. Time on Page**.
+    -   [ ] Add an "Analytics Widget" to the Admin Dashboard (replacing the static placeholder).
+-   **Refinement:**
+    -   [ ] **Global Branding Fix:** Replace all hardcoded "ROI Stack" instances with dynamic `APP_NAME` usage.
 
-## Phase 2: The "Proof" Engine (Core Feature)
-*Focus: Demonstrating competence through structured, data-driven case studies.*
+## Phase 6: The "Living" UI (The Beauty)
+*Focus: High-end interactions using Canvas/Three.js concepts.*
 
-- **Data Architecture:**
-  - [ ] Design `CaseStudies` database schema.
-  - [ ] Implement JSON columns for structured data: `problem`, `solution`, `roi_metrics`.
-- **Backend Logic:**
-  - [ ] Implement Controller/Service layer for serving Case Studies.
-- **Frontend Implementation:**
-  - [ ] Build high-performance **Case Study Index**.
-  - [ ] Build immersive **Case Study Detail** view.
-- **The "Wow" Factor:**
-  - [ ] Implement Interactive "Before/After" slider or toggle component for UI comparisons.
-
-## Phase 3: The Conversion Layer
-*Focus: Turning visitors into leads.*
-
-- **ROI Tools:**
-  - [ ] Develop **ROI Calculator** Vue component (Input: Team size/hours -> Output: Savings).
-- **Lead Capture:**
-  - [ ] Implement "Book a Strategy Call" form.
-  - [ ] Setup simple mail notifications for leads.
-- **Offering:**
-  - [ ] Build **Services Section** focusing on "Productized Services" (e.g., "MVP in 4 weeks").
-
-## Phase 4: Polish & Performance (SEO)
-*Focus: Discoverability and User Experience.*
-
-- **Optimization:**
-  - [ ] Technical SEO (Meta tags, OpenGraph, JSON-LD for local business).
-  - [ ] Acheive 95+ Google Lighthouse score (Performance, Accessibility, SEO).
-- **Deployment:**
-  - [ ] Production deployment setup.
+-   **Cinematic Preloader:**
+    -   [ ] Create a **3D Wireframe Globe** (CSS 3D or Lightweight Three.js).
+    -   [ ] Animation: Globe spins in center -> Page Loads -> Globe moves to background layer.
+-   **Hero Dynamics:**
+    -   [ ] **Typewriter Effect:** Implement a typing animation for the H1 headline on load.
+    -   [ ] **Parallax Core:** The background Globe rotates and moves slightly based on scroll position.
+-   **Interactive Grid (The "Dissolve" Effect):**
+    -   [ ] Replace static CSS grid with an **HTML5 Canvas** component.
+    -   [ ] Physics: Grid lines float gently.
+    -   [ ] Interaction: Mouse hover causes lines to "dissolve/separate" and reform (Matrix/Data stream vibe).

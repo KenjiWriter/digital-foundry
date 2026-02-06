@@ -1,37 +1,33 @@
-# Technical Tasks
+# TASKS (Technical Checklist)
 
-## Phase 1: The "Value-First" Foundation
+## Phase 5: Intelligence & CRM
 
-- [x] **Project Setup:** Initialize Laravel 12 project with Inertia + Vue 3 stack.
-- [ ] **Styling Configuration:** Configure Tailwind CSS with "Corporate/SaaS" color palette (Deep Blues, Clean Grays).
-- [x] **Layout:** Create main Layout component with responsive navigation and footer.
-- [x] **Hero Section:** Implement Hero component focusing on Client Pain Points (Text + CTA).
-- [x] **Trust Component:** Build reusable "Trust Bar" component (logos/stats support).
+- [ ] **[Refactor] Dynamic App Name:**
+    -   Search `Welcome.vue`, `MainLayout.vue`, `Footer.vue`.
+    -   Replace "Digital Foundry" (string) with `usePage().props.appName`.
+    -   Ensure `HandleInertiaRequests.php` shares `appName` from `.env`.
+- [ ] **[Database] Leads Migration:**
+    -   Create `leads` table: `name`, `email`, `website` (nullable), `message`, `ip_address`.
+- [ ] **[Backend] Lead Capture:**
+    -   Update `ContactController`: Store data in `Lead` model before sending email.
+- [ ] **[Admin] Leads Manager:**
+    -   Create `Admin/Leads/Index.vue` (Data Table).
+    -   Create `Admin/Leads/Show.vue` (Detail view for reading long messages).
+- [ ] **[Analytics] Tracker Logic:**
+    -   Create `TrackVisits` middleware.
+    -   Store daily counts in a simple `site_stats` table (date, visits, total_duration).
+    -   Update `Dashboard.vue` to fetch and display a Chart/Graph of last 30 days.
 
-## Phase 2: The "Proof" Engine (Core Feature)
+## Phase 6: The "Living" UI (Advanced)
 
-- [x] **Database:** Create `case_studies` migration with `json` columns for `problem`, `solution`, `roi_metrics`.
-- [x] **Model:** Create `CaseStudy` model with strict typing and strict casts for JSON attributes.
-- [x] **Backend:** Implement `CaseStudyController` (Index/Show methods) and Resource classes.
-- [x] **Routing:** Define routes for Case Studies index and detail pages.
-- [x] **Frontend - Index:** Build `CaseStudies/Index.vue` with grid layout and summary cards.
-- [x] **Frontend - Detail:** Build `CaseStudies/Show.vue` utilizing the structured data (Problem/Solution/ROI).
-- [ ] **Components:** Create `BeforeAfterSlider.vue` component for visual comparison ("The Wow Component").
-- [x] **Seeding:** Create a Seeder with dummy Case Study data for development.
-
-## Phase 3: The Conversion Layer
-
-- [x] **ROI Tools:** Develop **ROI Calculator** Vue component (Input: Team size/hours -> Output: Savings).
-- [x] **Lead Capture:** Implement "Book a Strategy Call" form (integrated with a simple mail notification).
-- [x] **Services:** Defined as "Productized Services" (e.g., "MVP in 4 weeks"), not just a list of languages.
-
-## Phase 4: The Control Room (CMS)
-
-- [x] **Auth:** Configure existing **Laravel Fortify** scaffolding with corporate dark theme (replaced Breeze Plan to avoid bloat).
-- [x] **Admin Layout:** Create `AdminLayout.vue` with corporate dark theme.
-- [x] **Dashboard:** Build a simple dashboard showing recent Leads.
-- [x] **Case Study Manager:** CRUD interface to manage Case Studies without code.
-
-## Final
-- [x] **Documentation:** Created CMS Guide and Deployment Guide.
-- [x] **Branding:** Rebranded to "Digital Foundry".
+- [ ] **[Component] TypewriterText.vue:**
+    -   Reusable component that takes a string and types it out character by character with a blinking cursor.
+- [ ] **[Component] DigitalGlobe.vue:**
+    -   Implement a wireframe sphere.
+    -   **State 1 (Loading):** Centered, opaque, fast spin.
+    -   **State 2 (Background):** Fixed position, low opacity, slow spin, scroll-based rotation (Parallax).
+- [ ] **[Component] InteractiveGrid.vue (Canvas):**
+    -   **Setup:** Full-screen HTML Canvas behind content.
+    -   **Logic:** Draw grid lines via JS.
+    -   **Animation:** Add "Perlin Noise" or Sine waves to make lines float.
+    -   **Interaction:** Calculate distance from mouse. If mouse is close, push points away or reduce opacity (dissolve effect).

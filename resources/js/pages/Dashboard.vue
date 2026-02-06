@@ -12,6 +12,27 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const props = defineProps<{
+    stats?: Array<{
+        date: string;
+        visits: number;
+        page_views: number;
+    }>;
+}>();
+
+import { computed } from 'vue';
+
+const stats = computed(() => props.stats || []);
+
+const maxVisits = computed(() => {
+    if (stats.value.length === 0) return 1;
+    return Math.max(...stats.value.map(s => s.visits));
+});
+
+const totalVisits = computed(() => {
+    return stats.value.reduce((acc, curr) => acc + curr.visits, 0);
+});
+
 // Declare route helper
 declare const route: any;
 </script>
@@ -50,15 +71,45 @@ declare const route: any;
                     </div>
                 </Link>
 
-                <!-- Analytics / Placeholder -->
-                <div class="relative overflow-hidden rounded-xl border border-gray-800 bg-[#111827]/50 p-6 opacity-75">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="p-3 rounded-lg bg-gray-800 text-gray-400">
-                            <BarChart class="h-6 w-6" />
+                <!-- Analytics Chart -->
+                <div class="relative overflow-hidden rounded-xl border border-gray-800 bg-[#111827] p-6 col-span-2 md:col-span-1">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 rounded-lg bg-green-500/10 text-green-400">
+                                <BarChart class="h-6 w-6" />
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white">Traffic Overview</h3>
+                                <p class="text-sm text-gray-400">Last 30 Days</p>
+                            </div>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-300">Traffic Analytics</h3>
+                        <div class="text-right">
+                             <div class="text-2xl font-bold text-white">{{ totalVisits }}</div>
+                             <div class="text-xs text-gray-500 uppercase tracking-wider">Total Visits</div>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-500">Coming soon directly to your dashboard.</p>
+
+                    <!-- SVG Chart -->
+                    <div class="h-32 w-full flex items-end gap-1">
+                        <div 
+                            v-for="(stat, index) in stats" 
+                            :key="index"
+                            class="relative flex-1 group"
+                            :title="`${stat.date}: ${stat.visits} visits`"
+                        >
+                            <div 
+                                class="w-full bg-green-500/20 hover:bg-green-500/40 transition-colors rounded-t-sm"
+                                :style="{ height: `${(stat.visits / maxVisits) * 100}%` }"
+                            ></div>
+                             <!-- Tooltip (SimpleCSS) -->
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 border border-gray-700">
+                                {{ stat.date }}: {{ stat.visits }}
+                            </div>
+                        </div>
+                         <div v-if="stats.length === 0" class="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+                            No data yet.
+                        </div>
+                    </div>
                 </div>
 
             </div>
