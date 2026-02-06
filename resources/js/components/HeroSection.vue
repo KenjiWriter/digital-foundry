@@ -12,6 +12,10 @@ import InteractiveGrid from '@/Components/InteractiveGrid.vue';
 const scrollToAudit = () => {
     document.getElementById('audit')?.scrollIntoView({ behavior: 'smooth' });
 };
+
+const scrollToContact = () => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+};
 </script>
 
 <template>
@@ -67,13 +71,14 @@ const scrollToAudit = () => {
                 <!-- CTAs -->
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
                     <!-- Primary CTA -->
-                    <Link 
-                        href="/strategy-call" 
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:bg-accent/90 hover:scale-105"
+                    <a 
+                        href="#contact" 
+                        @click.prevent="scrollToContact"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:bg-accent/90 hover:scale-105 cursor-pointer"
                     >
                         {{ trans('nav.book_call') }}
                         <ArrowRight class="h-5 w-5" />
-                    </Link>
+                    </a>
 
                     <!-- Secondary CTA -->
                     <Link 
