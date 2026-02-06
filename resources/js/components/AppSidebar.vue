@@ -23,12 +23,12 @@ declare const route: any;
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/dashboard',
         icon: LayoutGrid,
     },
     {
         title: 'Case Studies',
-        href: route('admin.case-studies.index'),
+        href: '/admin/case-studies',
         icon: Folder,
     },
 ];
