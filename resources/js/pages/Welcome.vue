@@ -5,8 +5,8 @@ import HeroSection from '@/Components/HeroSection.vue';
 import TrustBar from '@/Components/TrustBar.vue';
 import BusinessAudit from '@/Components/Landing/BusinessAudit.vue';
 import ContactSection from '@/Components/ContactSection.vue';
-import { useTelemetry } from '@/Composables/useTelemetry';
-import { useCookieConsent } from '@/Composables/useCookieConsent';
+import { useTelemetry } from '@/composables/useTelemetry';
+import { useCookieConsent } from '@/composables/useCookieConsent';
 
 const props = defineProps<{
     auditSectors?: any[];

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCookieConsent } from '@/Composables/useCookieConsent';
+import { useCookieConsent } from '@/composables/useCookieConsent';
 import { useTrans } from '@/composables/useTrans';
 import { Link } from '@inertiajs/vue3';
 

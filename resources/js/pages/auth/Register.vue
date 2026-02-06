@@ -8,7 +8,8 @@ import { Label } from '@/Components/ui/label';
 import { Spinner } from '@/Components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { login } from '@/routes';
-import { store } from '@/routes/register';
+// import { store } from '@/routes/register';
+const store = { form: () => ({}) };
 </script>
 
 <template>
@@ -97,7 +98,7 @@ import { store } from '@/routes/register';
             <div class="text-center text-sm text-muted-foreground">
                 Already have an account?
                 <TextLink
-                    :href="login()"
+                    href="#"
                     class="underline underline-offset-4"
                     :tabindex="6"
                     >Log in</TextLink

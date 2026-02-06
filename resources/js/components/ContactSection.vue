@@ -3,8 +3,60 @@ import { useForm } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue';
 import { Mail, Sun, ArrowRight, Loader2, Check } from 'lucide-vue-next';
 import { useTrans } from '@/composables/useTrans';
+import { useTelemetry } from '@/composables/useTelemetry';
 
 const { trans } = useTrans();
+const { startSessionTime, sectionTimers, visitCount: telemetryVisitCount } = useTelemetry();
+
+const consentGranted = computed(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('cookie_consent') === 'granted';
+});
+
+const totalSessionTime = computed(() => {
+    if (typeof window === 'undefined') return '00:00';
+    // Calculate live time
+    const now = Date.now();
+    const seconds = Math.floor((now - startSessionTime.value) / 1000);
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+});
+
+const topSection = computed(() => {
+    const timers = sectionTimers.value;
+    let maxTime = -1;
+    let maxSection = '-';
+    
+    // Map IDs to friendly names
+    const names: Record<string, string> = {
+        'hero': 'Intro / Hero',
+        'trust-bar': 'Zaufali nam',
+        'roi': 'Kalkulator ROI',
+        'contact': 'Formularz',
+        'business-audit': 'Audyt Biznesowy'
+    };
+
+    for (const [section, time] of Object.entries(timers)) {
+        if (Number(time) > maxTime) {
+            maxTime = Number(time);
+            maxSection = names[section] || section;
+        }
+    }
+    
+    // Return friendly name + formatted time
+    /* 
+       Optional: format time for section
+       const m = Math.floor(maxTime / 60);
+       const s = Math.round(maxTime % 60);
+    */
+    
+    return maxSection;
+});
+
+const visitCount = computed(() => {
+    return telemetryVisitCount.value;
+});
 
 const form = useForm({
     name: '',
@@ -14,19 +66,9 @@ const form = useForm({
 });
 
 const isSuccess = ref(false);
-const isSettled = ref(false); // Animation trigger
-const isFixed = ref(true); // Positioning mode
 const submitButtonRef = ref<HTMLElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
 const isHoveringButton = ref(false);
-
-const overlayStyle = reactive({
-    top: '0px',
-    left: '0px',
-    width: '100vw',
-    height: '100vh',
-    borderRadius: '0px',
-});
 
 // Mouse State (Global)
 const mouse = ref({ x: 0, y: 0 });
@@ -158,41 +200,40 @@ onUnmounted(() => {
     }
 });
 
-const triggerShrink = () => {
-    if (isSettled.value || !containerRef.value) return;
-    
-    const rect = containerRef.value.getBoundingClientRect();
-    
-    overlayStyle.top = `${rect.top}px`;
-    overlayStyle.left = `${rect.left}px`;
-    overlayStyle.width = `${rect.width}px`;
-    overlayStyle.height = `${rect.height}px`;
-    overlayStyle.borderRadius = '24px'; 
-    
-    isSettled.value = true;
-
-    setTimeout(() => {
-        isFixed.value = false;
-        overlayStyle.top = '0';
-        overlayStyle.left = '0';
-        overlayStyle.width = '100%';
-        overlayStyle.height = '100%';
-    }, 1000); 
-};
+const finalStats = ref<{
+    totalSessionTime: string;
+    topSection: string;
+    visitCount: number;
+    sessionId?: string | null;
+} | null>(null);
 
 const submit = () => {
     fixUrl(); // Auto-fix before submit
+
+    // Snapshot telemetry data
+    finalStats.value = {
+        totalSessionTime: totalSessionTime.value,
+        topSection: topSection.value,
+        visitCount: visitCount.value,
+        sessionId: startSessionTime.value ? 'SESSION-' + Date.now().toString(36).toUpperCase() : null // Mock or grab real ID if available
+    };
+    
+    // Logic to grab real ID if in store, but for now we snapshot visual data. 
+    // Ideally we grab from useTelemetry if exposed. 
+    // Let's grab it from local storage directly for display if needed or keep it simple.
+    
+    // Re-grab ID from storage strictly for valid display
+    const storedId = typeof localStorage !== 'undefined' ? localStorage.getItem('telemetry_session_id') : null;
+    if (storedId) finalStats.value.sessionId = storedId;
+
+
     form.post('/contact', {
         preserveScroll: true,
         onSuccess: () => {
              isSuccess.value = true;
              form.reset();
-             setTimeout(() => {
-                 triggerShrink();
-             }, 4000);
         },
         onError: () => {
-            // Optional: Handle error (Inertia handles validation errors automatically via props errors)
             console.error('Submission failed');
         }
     });
@@ -217,55 +258,11 @@ const backgroundStyle = computed(() => {
             :style="backgroundStyle"
         ></div>
 
-        <!-- SUCCESS OVERLAY (Morphing) -->
-        <div 
-            v-if="isSuccess"
-            class="z-50 flex flex-col items-center justify-center text-center overflow-hidden cursor-pointer"
-            :class="[
-                isFixed ? 'fixed' : 'absolute',
-                isSettled ? 'bg-[#fefce8] shadow-2xl' : 'bg-[#fefce8]'
-            ]"
-            :style="isFixed ? overlayStyle : { inset: 0, borderRadius: '1.5rem' }"
-            style="transition: top 1s ease-in-out, left 1s ease-in-out, width 1s ease-in-out, height 1s ease-in-out, border-radius 1s;"
-            @click="triggerShrink"
-        >
-            <!-- Large Fullscreen Content -->
-            <div 
-                class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000"
-                :class="isSettled ? 'opacity-0 scale-90 delay-0' : 'opacity-100 scale-100 delay-300'"
-            >
-                <div class="mb-8 mx-auto h-24 w-24 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center animate-pulse">
-                    <Sun class="h-12 w-12" />
-                </div>
-                <h2 class="text-5xl md:text-7xl font-serif text-gray-900 mb-6 drop-shadow-sm tracking-tight leading-tight px-4">
-                    {{ trans('contact.success_title') }}
-                </h2>
-                <p class="text-2xl md:text-3xl text-gray-600 font-light max-w-2xl mx-auto px-4 font-sans">
-                    {{ trans('contact.success_msg') }}
-                </p>
-                <p class="mt-12 text-gray-400 text-sm animate-bounce">{{ trans('contact.close') }}</p>
-            </div>
-
-            <!-- Shrink/Settled Content -->
-            <div 
-                class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000"
-                :class="isSettled ? 'opacity-100 scale-100 delay-500' : 'opacity-0 scale-110'"
-            >
-                 <div class="mb-6 rounded-full bg-green-100 p-4 text-green-600">
-                    <Check class="h-8 w-8" />
-                </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2">{{ trans('contact.sent_title') }}</h3>
-                <p class="text-gray-600 max-w-md px-4">
-                    {{ trans('contact.sent_msg') }}
-                </p>
-            </div>
-            
-             <div class="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-        </div>
-
         <!-- Content Container -->
-        <div class="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 transition-opacity duration-700" :class="{'opacity-0': isSuccess}">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div class="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 transition-opacity duration-700">
+            
+            <!-- VIEW A: Contact Form (Visible when NOT success) -->
+            <div v-if="!isSuccess" class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                 
                 <!-- Left Column -->
                 <div class="space-y-10">
@@ -346,6 +343,98 @@ const backgroundStyle = computed(() => {
                         </button>
                     </form>
                 </div>
+            </div>
+
+            <!-- VIEW B: Success State (Two-Panel Layout) -->
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center animate-fade-in-up">
+                
+                <!-- Panel A: Standard "Message Sent" (Friendly) -->
+                <div class="bg-[#fefce8] p-10 rounded-3xl shadow-xl text-center md:text-left border border-orange-100 flex flex-col justify-center h-full min-h-[400px]">
+                     <div class="mb-8 mx-auto md:mx-0 h-20 w-20 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <Check class="h-10 w-10" />
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-serif text-gray-900 mb-6 drop-shadow-sm tracking-tight leading-tight">
+                        To początek nowej podróży!
+                    </h2>
+                    <p class="text-xl text-gray-600 font-light font-sans mb-8">
+                        Wkrótce się odezwiemy, aby rozświetlić Twój biznes.
+                    </p>
+                    <button @click="isSuccess = false" class="text-gray-400 text-sm hover:text-gray-600 transition-colors self-center md:self-start">
+                         ← Wróć do formularza
+                    </button>
+                </div>
+
+                <!-- Panel B: Tech Report (Technical - Light Mode) -->
+                <!-- Scenario 1: No Consent -->
+                <div v-if="!consentGranted" class="bg-gray-50 border border-gray-200 border-dashed p-8 rounded-3xl h-full min-h-[400px] flex flex-col relative overflow-hidden">
+                     <div class="relative z-10 flex flex-col h-full opacity-60">
+                        <div class="flex items-center gap-3 mb-6 border-b border-gray-200 pb-4">
+                            <div class="h-3 w-3 rounded-full bg-gray-300"></div>
+                            <h3 class="text-sm font-semibold text-gray-400 tracking-wider uppercase">Raport Analityczny</h3>
+                        </div>
+
+                        <div class="flex flex-col items-center justify-center flex-grow py-8 space-y-4">
+                            <div class="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                                <span class="text-2xl">🔒</span>
+                            </div>
+                            <p class="text-gray-400 font-medium text-center">Brak zgody na pliki cookies</p>
+                            <p class="text-gray-400 text-sm text-center max-w-xs">Gdybyś wyraził zgodę, w tym miejscu pojawiłoby się podsumowanie Twojej wizyty.</p>
+                        </div>
+
+                        <div class="space-y-4 my-8 font-mono text-sm pointer-events-none blur-[2px] select-none opacity-50">
+                            <div class="flex justify-between border-b border-gray-200 pb-2 border-dashed">
+                                <span class="text-gray-400">Czas na stronie:</span>
+                                <span class="text-gray-400 font-bold">--:--</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-200 pb-2 border-dashed">
+                                <span class="text-gray-400">Ulubiona sekcja:</span>
+                                <span class="text-gray-400 font-bold">---</span>
+                            </div>
+                             <div class="flex justify-between border-b border-gray-200 pb-2 border-dashed">
+                                <span class="text-gray-400">Wizyt:</span>
+                                <span class="text-gray-400 font-bold">--</span>
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-gray-400 mt-auto pt-4 border-t border-gray-200 text-center">
+                             Dane nie zostały zebrane.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 2: Consent Granted -->
+                <div v-else class="bg-white border border-gray-200 p-8 rounded-3xl h-full min-h-[400px] flex flex-col relative overflow-hidden shadow-sm">
+                     <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                            <div class="h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
+                            <h3 class="text-sm font-semibold text-slate-700 tracking-wider uppercase">Raport Analityczny</h3>
+                        </div>
+
+                        <p class="text-slate-600 mb-auto text-sm leading-relaxed">
+                            Dzięki Twojej zgodzie, nasz system przeanalizował Twoją sesję.
+                        </p>
+
+                        <div class="space-y-4 my-8 font-mono text-sm">
+                            <div class="flex justify-between border-b border-gray-100 pb-2">
+                                <span class="text-slate-500">Czas na stronie:</span>
+                                <span class="text-slate-800 font-bold">{{ finalStats?.totalSessionTime || '...' }}</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-100 pb-2">
+                                <span class="text-slate-500">Ulubiona sekcja:</span>
+                                <span class="text-slate-800 font-bold truncate max-w-[150px] text-right">{{ finalStats?.topSection || '...' }}</span>
+                            </div>
+                             <div class="flex justify-between border-b border-gray-100 pb-2">
+                                <span class="text-slate-500">Twoich wizyt:</span>
+                                <span class="text-slate-800 font-bold">{{ finalStats?.visitCount || '...' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 rounded-lg p-4 mt-auto">
+                             <p class="text-xs text-blue-600 font-medium">Systemy, które budujemy, dostarczają takich danych w czasie rzeczywistym. Twój też może to robić.</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>

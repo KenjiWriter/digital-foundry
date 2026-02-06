@@ -1,0 +1,31 @@
+﻿
+> build
+> vite build
+
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+[plugin @laravel/vite-plugin-wayfinder] Types generated for actions, routes, form variants
+transforming...
+[32mÔťô[39m 1725 modules transformed.
+node.exe : [31mÔťŚ[39m Build failed in 2.24s
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([31mÔťŚ[39m Build failed in  
+   2.24s:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[31merror during build:
+[31m[vite:load-fallback] Could not load /resources/js/routes/register (impo
+rted by resources/js/pages/auth/Register.vue?vue&type=script&setup=true&lang
+.ts): ENOENT: no such file or directory, open 'C:\resources\js\routes\regist
+er'[31m
+    at async open (node:internal/fs/promises:642:25)
+    at async Object.readFile (node:internal/fs/promises:1279:14)
+    at async Object.handler (file:///C:/dev/portfolio/node_modules/vite/dist
+/node/chunks/config.js:33169:21)
+    at async PluginDriver.hookFirstAndGetPlugin (file:///C:/dev/portfolio/no
+de_modules/rollup/dist/es/shared/node-entry.js:22430:28)
+    at async file:///C:/dev/portfolio/node_modules/rollup/dist/es/shared/nod
+e-entry.js:21422:33
+    at async Queue.work (file:///C:/dev/portfolio/node_modules/rollup/dist/e
+s/shared/node-entry.js:22658:32)[39m

@@ -1,21 +1,38 @@
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref, Ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
-export function useTelemetry() {
-    const sessionId = ref(localStorage.getItem('telemetry_session_id'));
-    const events = ref([]);
-    const sectionTimers = ref({});
-    const currentSection = ref(null);
-    const lastSectionEnterTime = ref(Date.now());
-    const hasStartedForm = ref(false);
-    const isSubmitted = ref(false);
+// Global State
+const sessionId = ref<string | null>(localStorage.getItem('telemetry_session_id'));
+const events = ref<any[]>([]);
+const sectionTimers = ref<Record<string, number>>({});
+const currentSection = ref<string | null>(null);
+const lastSectionEnterTime = ref<number>(Date.now());
+const startSessionTime = ref<number>(Date.now());
+const hasStartedForm = ref<boolean>(false);
+const isSubmitted = ref<boolean>(false);
+const visitCount = ref<number>(parseInt(localStorage.getItem('telemetry_visit_count') || '0'));
 
-    if (!sessionId.value) {
-        sessionId.value = uuidv4();
+// Initialize Session
+if (!sessionId.value) {
+    sessionId.value = uuidv4();
+    if (sessionId.value) {
         localStorage.setItem('telemetry_session_id', sessionId.value);
     }
 
-    const addEvent = (type, payload = {}) => {
+    // New session = increment visit count
+    visitCount.value++;
+    localStorage.setItem('telemetry_visit_count', visitCount.value.toString());
+} else {
+    // Existing session. 
+    // If visit count is 0 for some reason, set it to 1.
+    if (visitCount.value === 0) {
+        visitCount.value = 1;
+        localStorage.setItem('telemetry_visit_count', '1');
+    }
+}
+
+export function useTelemetry() {
+    const addEvent = (type: string, payload: any = {}) => {
         events.value.push({
             type,
             payload: {
@@ -44,7 +61,7 @@ export function useTelemetry() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
                 },
                 body: JSON.stringify(data),
                 keepalive: true, // Attempt to keep request alive on unload
@@ -54,7 +71,7 @@ export function useTelemetry() {
         }
     };
 
-    const trackSectionChange = (entry) => {
+    const trackSectionChange = (entry: IntersectionObserverEntry) => {
         const now = Date.now();
 
         // If we were in a section, record the duration
@@ -65,6 +82,14 @@ export function useTelemetry() {
                     section: currentSection.value,
                     duration: duration
                 });
+
+                // Track cumulative time per section for the report
+                if (currentSection.value) {
+                    if (!sectionTimers.value[currentSection.value]) {
+                        sectionTimers.value[currentSection.value] = 0;
+                    }
+                    sectionTimers.value[currentSection.value] += duration;
+                }
             }
         }
 
@@ -143,6 +168,10 @@ export function useTelemetry() {
     });
 
     return {
-        sessionId
+        sessionId,
+        events,
+        sectionTimers,
+        startSessionTime,
+        visitCount
     };
 }
