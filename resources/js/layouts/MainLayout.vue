@@ -100,7 +100,7 @@ onClickOutside(langMenuRef, () => {
                 <!-- CTA Button (Desktop) -->
                 <div class="hidden md:flex">
                     <Link 
-                        href="/strategy-call" 
+                        href="/#contact" 
                         class="inline-flex h-9 items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground shadow transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     >
                         {{ trans('nav.book_call') }}
@@ -147,7 +147,7 @@ onClickOutside(langMenuRef, () => {
                     </div>
                     
                     <Link 
-                        href="/strategy-call" 
+                        href="/#contact" 
                         class="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-accent px-3 py-2 text-base font-medium text-accent-foreground shadow hover:bg-accent/90"
                         @click="isMobileMenuOpen = false"
                     >
