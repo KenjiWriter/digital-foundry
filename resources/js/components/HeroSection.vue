@@ -8,42 +8,21 @@ import { Button } from '@/Components/ui/button';
 
 const { trans } = useTrans();
 import InteractiveGrid from '@/Components/InteractiveGrid.vue';
-import DigitalGlobe from '@/Components/DigitalGlobe.vue';
 
 const scrollToAudit = () => {
     document.getElementById('audit')?.scrollIntoView({ behavior: 'smooth' });
 };
-const isGlobeLoading = ref(true);
-
-onMounted(() => {
-    // Lock for 1.2s then Zoom Out
-    setTimeout(() => {
-        isGlobeLoading.value = false;
-    }, 1200);
-});
 </script>
 
 <template>
-    <section class="relative overflow-hidden bg-background pt-16 pb-32 sm:pt-24 sm:pb-40 lg:pt-32 lg:pb-48">
+    <section class="relative overflow-hidden bg-transparent pt-16 pb-32 sm:pt-24 sm:pb-40 lg:pt-32 lg:pb-48">
         <!-- Abstract Background Elements -->
-        <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 z-0 pointer-events-none">
              <div class="absolute top-0 right-1/4 -z-10 h-[600px] w-[600px] rounded-full bg-accent/5 blur-[120px]"></div>
              <div class="absolute bottom-0 left-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[100px]"></div>
              
              <!-- Grid Pattern -->
              <InteractiveGrid />
-             
-             <!-- Digital Globe (Cinematic Layer) -->
-             <div 
-                class="transition-all duration-[1500ms] ease-in-out transform will-change-transform-opacity"
-                :class="[
-                    isGlobeLoading 
-                        ? 'fixed inset-0 z-50 flex items-center justify-center bg-black' 
-                        : 'absolute inset-0 z-0 opacity-60 bg-transparent'
-                ]"
-             >
-                 <DigitalGlobe />
-             </div>
         </div>
 
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">

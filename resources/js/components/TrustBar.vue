@@ -2,51 +2,56 @@
 import { useTrans } from '@/composables/useTrans';
 const { trans } = useTrans();
 
-// Placeholder text-based logos for now
-const companies = [
-    { name: 'LogisticsPro', class: 'font-serif font-bold tracking-tight' },
-    { name: 'TechFlow', class: 'font-sans font-extrabold tracking-tighter' },
-    { name: 'RetailOS', class: 'font-mono font-semibold tracking-wide' },
-    { name: 'MedCore', class: 'font-sans font-bold italic' },
-    { name: 'FinanceGuard', class: 'font-serif font-black' },
+const integrations = [
+    { name: 'InPost', class: 'font-sans font-extrabold tracking-tight' },
+    { name: 'Przelewy24', class: 'font-sans font-bold' },
+    { name: 'Allegro', class: 'font-sans font-bold tracking-tight' },
+    { name: 'Stripe', class: 'font-sans font-bold tracking-tighter' },
+    { name: 'DHL', class: 'font-serif font-black italic tracking-wide' },
+    { name: 'HubSpot', class: 'font-sans font-semibold' },
+    { name: 'wfirma', class: 'font-mono font-medium' },
+    { name: 'inFakt', class: 'font-sans font-bold' },
 ];
 </script>
 
 <template>
-    <section class="border-y border-border bg-muted/30 py-8">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="mb-6 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                {{ trans('trust.label') }}
+    <section class="border-y border-border/10 bg-[#020617] py-12 sm:py-16 relative z-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center mb-10">
+            <h2 class="text-lg font-semibold uppercase tracking-widest text-accent mb-3">
+                Integracje z kluczowymi usługami
+            </h2>
+            <p class="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+                Tworzymy ekosystemy. Łączymy Twój customowy software z liderami rynku.
             </p>
-            
-            <div class="relative flex w-full overflow-hidden">
-                <!-- Gradients for smooth fade effect -->
-                <div class="absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background/0 to-transparent sm:from-muted/30"></div>
-                <div class="absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background/0 to-transparent sm:from-muted/30"></div>
+        </div>
+        
+        <div class="relative flex w-full overflow-hidden">
+            <!-- Gradients for smooth fade effect -->
+            <div class="absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#020617] to-transparent"></div>
+            <div class="absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#020617] to-transparent"></div>
 
-                <!-- Marquee Container -->
-                <div class="flex animate-marquee whitespace-nowrap">
-                    <!-- Original Set -->
-                    <div class="flex min-w-full items-center justify-around gap-12 px-12 sm:gap-24 sm:px-24">
-                        <span 
-                            v-for="company in companies" 
-                            :key="company.name" 
-                            :class="[company.class, 'text-2xl text-muted-foreground/50 transition-colors hover:text-foreground/80']"
-                        >
-                            {{ company.name }}
-                        </span>
-                    </div>
-                    
-                    <!-- Duplicate Set for Infinity Scroll -->
-                    <div class="flex min-w-full items-center justify-around gap-12 px-12 sm:gap-24 sm:px-24">
-                         <span 
-                            v-for="(company, index) in companies" 
-                            :key="`${company.name}-duplicate-${index}`" 
-                            :class="[company.class, 'text-2xl text-muted-foreground/50 transition-colors hover:text-foreground/80']"
-                        >
-                            {{ company.name }}
-                        </span>
-                    </div>
+            <!-- Marquee Container -->
+            <div class="flex animate-marquee whitespace-nowrap">
+                <!-- Original Set -->
+                <div class="flex min-w-full items-center justify-around gap-12 px-12 sm:gap-24 sm:px-24">
+                    <span 
+                        v-for="item in integrations" 
+                        :key="item.name" 
+                        :class="[item.class, 'text-2xl sm:text-3xl text-muted-foreground/50 transition-all duration-300 hover:text-white hover:scale-110 cursor-default']"
+                    >
+                        {{ item.name }}
+                    </span>
+                </div>
+                
+                <!-- Duplicate Set for Infinity Scroll -->
+                <div class="flex min-w-full items-center justify-around gap-12 px-12 sm:gap-24 sm:px-24">
+                     <span 
+                        v-for="(item, index) in integrations" 
+                        :key="`${item.name}-duplicate-${index}`" 
+                        :class="[item.class, 'text-2xl sm:text-3xl text-muted-foreground/50 transition-all duration-300 hover:text-white hover:scale-110 cursor-default']"
+                    >
+                        {{ item.name }}
+                    </span>
                 </div>
             </div>
         </div>
