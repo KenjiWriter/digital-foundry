@@ -1,6 +1,22 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { ArrowRight, BarChart } from 'lucide-vue-next';
+import { useTrans } from '@/composables/useTrans';
+import TypewriterText from '@/Components/TypewriterText.vue';
+
+const trans = useTrans();
+import InteractiveGrid from '@/Components/InteractiveGrid.vue';
+import DigitalGlobe from '@/Components/DigitalGlobe.vue';
+
+const isGlobeLoading = ref(true);
+
+onMounted(() => {
+    // Lock for 1.2s then Zoom Out
+    setTimeout(() => {
+        isGlobeLoading.value = false;
+    }, 1200);
+});
 </script>
 
 <template>
@@ -11,7 +27,19 @@ import { ArrowRight, BarChart } from 'lucide-vue-next';
              <div class="absolute bottom-0 left-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[100px]"></div>
              
              <!-- Grid Pattern -->
-             <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] mask-image-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+             <InteractiveGrid />
+             
+             <!-- Digital Globe (Cinematic Layer) -->
+             <div 
+                class="transition-all duration-[1500ms] ease-in-out transform will-change-transform-opacity"
+                :class="[
+                    isGlobeLoading 
+                        ? 'fixed inset-0 z-50 flex items-center justify-center bg-black' 
+                        : 'absolute inset-0 z-0 opacity-60 bg-transparent'
+                ]"
+             >
+                 <DigitalGlobe />
+             </div>
         </div>
 
         <div class="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,8 +58,14 @@ import { ArrowRight, BarChart } from 'lucide-vue-next';
 
                 <!-- Headline -->
                 <h1 class="text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl leading-tight sm:leading-tight lg:leading-tight mb-8">
-                    Turn Custom Software into Your <span class="text-accent relative whitespace-nowrap">
-                        Competitive Advantage
+                    {{ trans('hero.title_start') }} <span class="text-accent relative inline-block min-h-[1.2em] sm:min-h-[1.1em] align-top">
+                        <TypewriterText 
+                            :text="trans<string[]>('hero.title_typing')" 
+                            :loop="true" 
+                            :speed="100"
+                            :deleteSpeed="50"
+                            :delay="1000"
+                        />
                         <svg class="absolute -bottom-2.5 left-0 h-3 w-full text-accent/30" viewBox="0 0 100 10" preserveAspectRatio="none">
                             <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
                         </svg>
@@ -40,7 +74,7 @@ import { ArrowRight, BarChart } from 'lucide-vue-next';
 
                 <!-- Subheadline -->
                 <p class="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl leading-relaxed mb-10">
-                    Stop relying on fragile spreadsheets. We build dedicated Laravel + Vue systems that automate your operations and secure your growth.
+                    {{ trans('hero.subtitle') }}
                 </p>
 
                 <!-- CTAs -->
@@ -50,7 +84,7 @@ import { ArrowRight, BarChart } from 'lucide-vue-next';
                         href="/strategy-call" 
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-4 text-base font-semibold text-accent-foreground shadow-lg shadow-accent/20 transition-all hover:bg-accent/90 hover:scale-105"
                     >
-                        Get a Free Strategy Audit
+                        {{ trans('nav.book_call') }}
                         <ArrowRight class="h-5 w-5" />
                     </Link>
 
@@ -60,7 +94,7 @@ import { ArrowRight, BarChart } from 'lucide-vue-next';
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-8 py-4 text-base font-semibold text-muted-foreground backdrop-blur-sm transition-all hover:bg-muted hover:text-foreground hover:border-primary/20"
                     >
                         <BarChart class="h-5 w-5" />
-                        View ROI Case Studies
+                        {{ trans('nav.case_studies') }}
                     </Link>
                 </div>
 

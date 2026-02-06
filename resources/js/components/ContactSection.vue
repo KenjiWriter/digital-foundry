@@ -2,6 +2,9 @@
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed, onMounted, onUnmounted, reactive, watch } from 'vue';
 import { Mail, Sun, ArrowRight, Loader2, Check } from 'lucide-vue-next';
+import { useTrans } from '@/composables/useTrans';
+
+const trans = useTrans();
 
 const form = useForm({
     name: '',
@@ -179,16 +182,20 @@ const triggerShrink = () => {
 
 const submit = () => {
     fixUrl(); // Auto-fix before submit
-    form.processing = true;
-    setTimeout(() => {
-        form.processing = false;
-        isSuccess.value = true;
-        form.reset();
-        
-        setTimeout(() => {
-            triggerShrink();
-        }, 4000);
-    }, 1500);
+    form.post('/contact', {
+        preserveScroll: true,
+        onSuccess: () => {
+             isSuccess.value = true;
+             form.reset();
+             setTimeout(() => {
+                 triggerShrink();
+             }, 4000);
+        },
+        onError: () => {
+            // Optional: Handle error (Inertia handles validation errors automatically via props errors)
+            console.error('Submission failed');
+        }
+    });
 };
 
 // Background Style (Uses RENDERED state, not target)
@@ -231,12 +238,12 @@ const backgroundStyle = computed(() => {
                     <Sun class="h-12 w-12" />
                 </div>
                 <h2 class="text-5xl md:text-7xl font-serif text-gray-900 mb-6 drop-shadow-sm tracking-tight leading-tight px-4">
-                    To początek <br/>nowej podróży!
+                    {{ trans('contact.success_title') }}
                 </h2>
                 <p class="text-2xl md:text-3xl text-gray-600 font-light max-w-2xl mx-auto px-4 font-sans">
-                    We'll be in touch shortly to light up your business.
+                    {{ trans('contact.success_msg') }}
                 </p>
-                <p class="mt-12 text-gray-400 text-sm animate-bounce">Click anywhere to close</p>
+                <p class="mt-12 text-gray-400 text-sm animate-bounce">{{ trans('contact.close') }}</p>
             </div>
 
             <!-- Shrink/Settled Content -->
@@ -247,9 +254,9 @@ const backgroundStyle = computed(() => {
                  <div class="mb-6 rounded-full bg-green-100 p-4 text-green-600">
                     <Check class="h-8 w-8" />
                 </div>
-                <h3 class="text-3xl font-bold text-gray-900 mb-2">Message Sent</h3>
+                <h3 class="text-3xl font-bold text-gray-900 mb-2">{{ trans('contact.sent_title') }}</h3>
                 <p class="text-gray-600 max-w-md px-4">
-                    We've received your request. Expect a tailored proposal in your inbox within 24 hours.
+                    {{ trans('contact.sent_msg') }}
                 </p>
             </div>
             
@@ -267,17 +274,16 @@ const backgroundStyle = computed(() => {
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
                         </span>
-                        Accepting New Clients
+                        {{ trans('contact.accepting') }}
                     </div>
 
                     <h2 class="text-5xl font-bold tracking-tight text-white sm:text-6xl leading-tight">
-                        Let's fix this <br />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-200">together.</span>
+                        {{ trans('contact.title_start') }} <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-200">{{ trans('contact.title_end') }}</span>
                     </h2>
                     
                     <p class="text-xl text-gray-400 leading-relaxed max-w-lg">
-                        You know what the problem is. We know how to solve it with code. 
-                        Fill out the form, and watch the sun rise on a more efficient future.
+                        {{ trans('contact.subtitle') }}
                     </p>
                     
                     <div class="flex items-center gap-4 pt-4">
@@ -285,7 +291,7 @@ const backgroundStyle = computed(() => {
                             <Mail class="h-6 w-6" />
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">Email Us</p>
+                            <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">{{ trans('contact.email_us') }}</p>
                             <a href="mailto:hello@roistack.com" class="text-2xl font-bold text-white hover:text-orange-400 transition-colors">
                                 hello@roistack.com
                             </a>
@@ -298,30 +304,30 @@ const backgroundStyle = computed(() => {
                     <form @submit.prevent="submit" class="space-y-6">
                          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div class="space-y-2">
-                                <label for="name" class="text-sm font-medium text-gray-400">Name</label>
-                                <input id="name" v-model="form.name" type="text" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" placeholder="Jane Smith" />
+                                <label for="name" class="text-sm font-medium text-gray-400">{{ trans('contact.form.name') }}</label>
+                                <input id="name" v-model="form.name" type="text" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" :placeholder="trans('contact.form.name_ph')" />
                             </div>
                             <div class="space-y-2">
-                                <label for="email" class="text-sm font-medium text-gray-400">Work Email</label>
-                                <input id="email" v-model="form.email" type="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" placeholder="jane@company.com" />
+                                <label for="email" class="text-sm font-medium text-gray-400">{{ trans('contact.form.email') }}</label>
+                                <input id="email" v-model="form.email" type="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" :placeholder="trans('contact.form.email_ph')" />
                             </div>
                         </div>
 
                         <div class="space-y-2">
-                            <label for="website" class="text-sm font-medium text-gray-400">Company Website</label>
+                            <label for="website" class="text-sm font-medium text-gray-400">{{ trans('contact.form.website') }}</label>
                             <input 
                                 id="website" 
                                 v-model="form.website" 
                                 type="text" 
                                 class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all font-light tracking-wide" 
-                                placeholder="company.com"
+                                :placeholder="trans('contact.form.website_ph')"
                                 @blur="fixUrl" 
                             />
                         </div>
 
                         <div class="space-y-2">
-                            <label for="pain_point" class="text-sm font-medium text-gray-400">The Challenge</label>
-                            <textarea id="pain_point" v-model="form.pain_point" rows="4" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all resize-none font-light tracking-wide" placeholder="Describe the inefficiency you want to eliminate..."></textarea>
+                            <label for="pain_point" class="text-sm font-medium text-gray-400">{{ trans('contact.form.challenge') }}</label>
+                            <textarea id="pain_point" v-model="form.pain_point" rows="4" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500/50 focus:ring-1 focus:ring-orange-500/50 transition-all resize-none font-light tracking-wide" :placeholder="trans('contact.form.challenge_ph')"></textarea>
                         </div>
 
                         <button 
@@ -334,7 +340,7 @@ const backgroundStyle = computed(() => {
                         >
                             <span class="relative z-10 flex items-center gap-2">
                                 <Loader2 v-if="form.processing" class="h-5 w-5 animate-spin" />
-                                <span v-else>{{ form.processing ? 'Starting Engines...' : 'Request Free Audit' }}</span>
+                                <span v-else>{{ form.processing ? trans('contact.submitting') : trans('contact.submit') }}</span>
                                 <ArrowRight v-if="!form.processing" class="h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </span>
                         </button>

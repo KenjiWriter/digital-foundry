@@ -2,21 +2,42 @@
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { Menu, X, ArrowRight, Github, Twitter, Linkedin } from 'lucide-vue-next';
+import { useTrans } from '@/composables/useTrans';
 
 // Mobile menu state
 const isMobileMenuOpen = ref(false);
+const trans = useTrans();
 
 const currentYear = new Date().getFullYear();
 
-const navLinks = [
-    { name: 'Case Studies', href: '/case-studies' },
-    { name: 'Services', href: '/services' },
-    { name: 'Process', href: '/process' },
-];
+import { computed } from 'vue';
+
+const navLinks = computed(() => [
+    { name: trans('nav.case_studies'), href: '/case-studies' },
+    { name: trans('nav.services'), href: '/services' },
+    { name: trans('nav.process'), href: '/process' },
+]);
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
+
+import { Globe } from 'lucide-vue-next';
+import { onClickOutside } from '@vueuse/core';
+
+const languages = [
+    { code: 'en', label: 'EN' },
+    { code: 'pl', label: 'PL' },
+    { code: 'es', label: 'ES' },
+    { code: 'ru', label: 'RU' },
+];
+
+const isLangOpen = ref(false);
+const langMenuRef = ref(null);
+
+onClickOutside(langMenuRef, () => {
+    isLangOpen.value = false;
+});
 </script>
 
 <template>
@@ -28,7 +49,7 @@ const toggleMobileMenu = () => {
                 <!-- Logo -->
                 <div class="flex items-center">
                     <Link href="/" class="flex items-center gap-2 text-xl font-bold tracking-tight text-primary">
-                        <span class="text-2xl">ROI</span>Stack
+                        {{ $page.props.appName }}
                     </Link>
                 </div>
 
@@ -44,13 +65,43 @@ const toggleMobileMenu = () => {
                     </Link>
                 </nav>
 
+                <!-- Language Switcher -->
+                <div class="hidden md:flex items-center space-x-1 mr-4">
+                    <div class="relative" ref="langMenuRef">
+                        <button 
+                            @click="isLangOpen = !isLangOpen"
+                            class="flex items-center space-x-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                        >
+                            <Globe class="h-4 w-4" />
+                            <span class="uppercase">{{ $page.props.locale }}</span>
+                        </button>
+                        <!-- Dropdown -->
+                        <div 
+                            v-if="isLangOpen"
+                            class="absolute right-0 mt-2 w-24 origin-top-right rounded-md bg-background shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none animate-in fade-in zoom-in-95 duration-200"
+                        >
+                             <div class="py-1">
+                                <a 
+                                    v-for="lang in languages" 
+                                    :key="lang.code"
+                                    :href="`/language/${lang.code}`"
+                                    class="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground"
+                                    :class="{ 'font-bold': lang.code === $page.props.locale }"
+                                >
+                                    {{ lang.label }}
+                                </a>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- CTA Button (Desktop) -->
                 <div class="hidden md:flex">
                     <Link 
                         href="/strategy-call" 
                         class="inline-flex h-9 items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-foreground shadow transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     >
-                        Book Strategy Call
+                        {{ trans('nav.book_call') }}
                     </Link>
                 </div>
 
@@ -79,12 +130,26 @@ const toggleMobileMenu = () => {
                     >
                         {{ link.name }}
                     </Link>
+                    
+                    <!-- Mobile Languages -->
+                    <div class="flex flex-wrap gap-2 px-3 py-2">
+                         <a 
+                            v-for="lang in languages" 
+                            :key="lang.code"
+                            :href="`/language/${lang.code}`"
+                            class="px-2 py-1 text-sm border rounded-md"
+                            :class="lang.code === $page.props.locale ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground'"
+                        >
+                            {{ lang.label }}
+                        </a>
+                    </div>
+                    
                     <Link 
                         href="/strategy-call" 
                         class="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-accent px-3 py-2 text-base font-medium text-accent-foreground shadow hover:bg-accent/90"
                         @click="isMobileMenuOpen = false"
                     >
-                        Book Strategy Call
+                        {{ trans('nav.book_call') }}
                         <ArrowRight class="h-4 w-4" />
                     </Link>
                 </div>
@@ -103,9 +168,9 @@ const toggleMobileMenu = () => {
                     
                     <!-- Column 1: Brand/One-liner -->
                     <div class="space-y-4">
-                        <Link href="/" class="text-xl font-bold text-primary">Digital Foundry</Link>
+                        <Link href="/" class="text-xl font-bold text-primary">{{ $page.props.appName }}</Link>
                         <p class="text-sm leading-relaxed text-muted-foreground">
-                            Helping B2B companies automate processes and increase revenue with high-performance software.
+                            {{ trans('footer.brand_desc') }}
                         </p>
                         <div class="flex space-x-4">
                             <a href="#" class="text-muted-foreground hover:text-primary">
@@ -125,7 +190,7 @@ const toggleMobileMenu = () => {
 
                     <!-- Column 2: Quick Links -->
                     <div>
-                        <h3 class="text-sm font-semibold text-foreground">Quick Links</h3>
+                        <h3 class="text-sm font-semibold text-foreground">{{ trans('footer.quick_links') }}</h3>
                         <ul class="mt-4 space-y-2">
                             <li v-for="link in navLinks" :key="link.name">
                                 <Link :href="link.href" class="text-sm text-muted-foreground hover:text-primary">
@@ -133,14 +198,14 @@ const toggleMobileMenu = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/privacy" class="text-sm text-muted-foreground hover:text-primary">Privacy Policy</Link>
+                                <Link href="/privacy" class="text-sm text-muted-foreground hover:text-primary">{{ trans('footer.privacy') }}</Link>
                             </li>
                         </ul>
                     </div>
 
                     <!-- Column 3: Contact Info -->
                     <div>
-                        <h3 class="text-sm font-semibold text-foreground">Contact</h3>
+                        <h3 class="text-sm font-semibold text-foreground">{{ trans('footer.contact') }}</h3>
                         <ul class="mt-4 space-y-2">
                             <li>
                                 <a href="mailto:hello@roistack.com" class="text-sm text-muted-foreground hover:text-primary">
@@ -157,7 +222,7 @@ const toggleMobileMenu = () => {
 
                 <div class="mt-8 border-t border-border pt-8">
                     <p class="text-center text-xs text-muted-foreground">
-                        &copy; {{ currentYear }} Digital Foundry. All rights reserved.
+                        &copy; {{ currentYear }} {{ $page.props.appName }}. {{ trans('footer.rights') }}
                     </p>
                 </div>
             </div>

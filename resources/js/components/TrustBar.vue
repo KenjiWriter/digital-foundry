@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useTrans } from '@/composables/useTrans';
+const trans = useTrans();
+
 // Placeholder text-based logos for now
 const companies = [
     { name: 'LogisticsPro', class: 'font-serif font-bold tracking-tight' },
@@ -13,7 +16,7 @@ const companies = [
     <section class="border-y border-border bg-muted/30 py-8">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <p class="mb-6 text-center text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                Trusted by forward-thinking companies
+                {{ trans('trust.label') }}
             </p>
             
             <div class="relative flex w-full overflow-hidden">
