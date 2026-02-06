@@ -301,7 +301,7 @@ const backgroundStyle = computed(() => {
 
                 <!-- Right Column: Form -->
                 <div class="relative bg-black/40 backdrop-blur-xl border border-white/10 p-8 sm:p-10 rounded-3xl shadow-2xl">
-                    <form @submit.prevent="submit" class="space-y-6">
+                    <form @submit.prevent="submit" id="contact-form" class="space-y-6">
                          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                             <div class="space-y-2">
                                 <label for="name" class="text-sm font-medium text-gray-400">{{ trans('contact.form.name') }}</label>

@@ -5,16 +5,27 @@ import HeroSection from '@/Components/HeroSection.vue';
 import TrustBar from '@/Components/TrustBar.vue';
 import RoiCalculator from '@/Components/RoiCalculator.vue';
 import ContactSection from '@/Components/ContactSection.vue';
+import { useTelemetry } from '@/Composables/useTelemetry';
+
+useTelemetry();
 </script>
 
 <template>
     <Head title="Welcome" />
 
     <MainLayout>
-        <HeroSection />
-        <TrustBar />
-        <RoiCalculator />
-        <ContactSection />
+        <div id="hero">
+            <HeroSection />
+        </div>
+        <div id="trust-bar">
+            <TrustBar />
+        </div>
+        <div id="roi">
+            <RoiCalculator />
+        </div>
+        <div id="contact">
+            <ContactSection />
+        </div>
     </MainLayout>
 </template>
 
