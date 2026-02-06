@@ -6,8 +6,13 @@ import TrustBar from '@/Components/TrustBar.vue';
 import RoiCalculator from '@/Components/RoiCalculator.vue';
 import ContactSection from '@/Components/ContactSection.vue';
 import { useTelemetry } from '@/Composables/useTelemetry';
+import { useCookieConsent } from '@/Composables/useCookieConsent';
 
-useTelemetry();
+const { consentStatus } = useCookieConsent();
+
+if (consentStatus.value === 'granted') {
+    useTelemetry();
+}
 </script>
 
 <template>
