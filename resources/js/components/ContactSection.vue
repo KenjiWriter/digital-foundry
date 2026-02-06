@@ -289,8 +289,8 @@ const backgroundStyle = computed(() => {
                         </div>
                         <div>
                             <p class="text-sm text-gray-500 uppercase tracking-widest font-semibold">{{ trans('contact.email_us') }}</p>
-                            <a href="mailto:hello@digitalfoundry.com" class="text-xl font-medium text-foreground hover:text-primary transition-colors">
-                                hello@digitalfoundry.com
+                            <a href="mailto:hello@cerasusdigital.pl" class="text-xl font-medium text-foreground hover:text-primary transition-colors">
+                                hello@cerasusdigital.pl
                             </a>
                         </div>
                     </div>

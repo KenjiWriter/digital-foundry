@@ -65,8 +65,8 @@ const navLinks = computed(() => [
                     <h3 class="text-sm font-semibold text-foreground">{{ trans('footer.contact') }}</h3>
                     <ul class="mt-4 space-y-3">
                         <li class="flex flex-col space-y-1">
-                             <a href="mailto:hello@digitalfoundry.com" class="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                hello@digitalfoundry.com
+                             <a href="mailto:hello@cerasusdigital.pl" class="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                hello@cerasusdigital.pl
                             </a>
                              <a href="tel:+48455518083" class="text-sm text-muted-foreground hover:text-primary transition-colors">
                                 {{ trans('footer.phone') }}
