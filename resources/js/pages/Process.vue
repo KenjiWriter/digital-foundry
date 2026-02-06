@@ -68,7 +68,9 @@ const steps = [
 </script>
 
 <template>
-    <Head title="Process" />
+    <Head title="Jak pracujemy? Proces Wdrożenia | Cerasus Digital">
+        <meta name="description" content="Od warsztatu po wdrożenie. Zobacz, jak bezpiecznie i terminowo dostarczamy oprogramowanie klasy Enterprise.">
+    </Head>
 
     <MainLayout>
         <!-- Hero Section -->

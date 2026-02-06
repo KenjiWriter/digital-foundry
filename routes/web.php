@@ -14,6 +14,31 @@ Route::get('/services', function () {
     return Inertia::render('Services');
 })->name('services');
 
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        '/',
+        '/services',
+        '/process',
+        '/#contact'
+    ];
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    foreach ($urls as $url) {
+        $xml .= '<url>';
+        $xml .= '<loc>' . url($url) . '</loc>';
+        $xml .= '<lastmod>' . now()->toAtomString() . '</lastmod>';
+        $xml .= '<changefreq>weekly</changefreq>';
+        $xml .= '<priority>' . ($url === '/' ? '1.0' : '0.8') . '</priority>';
+        $xml .= '</url>';
+    }
+
+    $xml .= '</urlset>';
+
+    return response($xml, 200, ['Content-Type' => 'application/xml']);
+});
+
 Route::get('/privacy-policy', function () {
     $locale = session('locale', 'en');
     $path = resource_path("markdown/legal/{$locale}/privacy.md");

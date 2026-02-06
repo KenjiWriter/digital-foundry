@@ -8,7 +8,9 @@ const { trans } = useTrans();
 </script>
 
 <template>
-    <Head title="Services" />
+    <Head title="Usługi Programistyczne & Audyt IT | Cerasus Digital">
+        <meta name="description" content="Oferujemy budowę systemów CRM/ERP, audyty kodu oraz przejmowanie projektów (Rescue Projects). Sprawdź naszą ofertę B2B.">
+    </Head>
 
     <MainLayout>
         <!-- Hero Section -->
