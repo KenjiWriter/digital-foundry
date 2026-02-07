@@ -33,16 +33,16 @@
     {{-- Structured Data (JSON-LD) --}}
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
+      "@@context": "https://schema.org",
+      "@@type": "ProfessionalService",
       "name": "Cerasus Digital",
       "image": "{{ asset('images/logo-og.png') }}",
-      "@id": "https://cerasusdigital.pl",
+      "@@id": "https://cerasusdigital.pl",
       "url": "https://cerasusdigital.pl",
       "telephone": "+48 455 518 083",
       "email": "hello@cerasusdigital.pl",
       "address": {
-        "@type": "PostalAddress",
+        "@@type": "PostalAddress",
         "streetAddress": "Emilianów 8A",
         "addressLocality": "Emilianów",
         "postalCode": "96-330",
@@ -50,7 +50,7 @@
       },
       "priceRange": "$$$",
       "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
+        "@@type": "OpeningHoursSpecification",
         "dayOfWeek": [
           "Monday",
           "Tuesday",
@@ -105,7 +105,9 @@
 
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     @inertiaHead
+
 </head>
+<!-- DEBUG_Identify_This_File -->
 
 <body class="font-sans antialiased">
     @inertia
